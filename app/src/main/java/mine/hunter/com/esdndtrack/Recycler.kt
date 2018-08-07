@@ -41,8 +41,7 @@ class Recycler : AppCompatActivity()
                         R.id.MENUCreateCharacter -> startActivity(Intent(this, CharacterCreater::class.java))
                         R.id.MENULoadCharacter ->
                         {
-                            val charMenu = CreateCharacterMenu(fab, getSharedPreferences(SavableItem.character_list.getStringKey(), Context.MODE_PRIVATE))
-                            charMenu.show()
+                           CreateCharacterMenu(fab, getSharedPreferences(SavableItem.character_list.getStringKey(), 0)).show()
                         }
                     }
                     true
@@ -196,9 +195,9 @@ class Recycler : AppCompatActivity()
     fun CreateCharacterMenu(view: View, sharedPreferences: SharedPreferences): PopupMenu
     {
         val menu = PopupMenu(this, view)
-        val characters = sharedPreferences.getStringSet("names", setOf())
+        val characters = sharedPreferences.getStringSet("names", setOf<String>())
         characters.forEachIndexed { index, s ->
-            menu.menu.addSubMenu(index, index, index, s)
+            menu.menu.add(s)
         }
         return menu
     }

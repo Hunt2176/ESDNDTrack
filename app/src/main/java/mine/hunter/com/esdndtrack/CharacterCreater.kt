@@ -55,7 +55,6 @@ class CharacterCreater : AppCompatActivity()
         }
 
         floatingComplete.setOnClickListener {
-            getSharedPreferences("character_list", Context.MODE_PRIVATE)
             if (nameInput.text == "character_list") {
                 Toast.makeText(this, "This is an invalid Character name", Toast.LENGTH_LONG).show()
             }
@@ -63,8 +62,12 @@ class CharacterCreater : AppCompatActivity()
                 val characterName = nameInput.text.toString()
                 val charList = getSharedPreferences(SavableItem.character_list.getStringKey(), Context.MODE_PRIVATE)
                 val charListEditor = charList.edit()
-                var characterList = charList.getStringSet("names", setOf<String>())
-                if (characterList.contains(characterName)) characterList.add(characterName)
+                var characterList = mutableSetOf<String>()
+                charList.getStringSet("names", mutableSetOf()).forEach { value ->
+                    characterList.add(value)
+                }
+                if (!characterList.contains(characterName)) characterList.add(characterName)
+
                 charListEditor.putStringSet("names", characterList)
                 charListEditor.apply()
 
@@ -79,6 +82,7 @@ class CharacterCreater : AppCompatActivity()
                 editor.apply()
 
                 Toast.makeText(this, "Saved $characterName to storage", Toast.LENGTH_LONG).show()
+                onBackPressed()
             }
         }
     }
