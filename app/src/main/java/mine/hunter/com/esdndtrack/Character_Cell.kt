@@ -154,7 +154,7 @@ class Character_Cell : AppCompatActivity()
             LevelValue.text = "${barToUpdate.max}"
 
             AddButton.setOnClickListener {
-                if (barToUpdate.max > 0)
+                if (barToUpdate.max >= 0)
                 {
                     barToUpdate.max += 1
                 }
