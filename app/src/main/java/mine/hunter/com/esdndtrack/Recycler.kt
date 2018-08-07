@@ -1,10 +1,9 @@
 package mine.hunter.com.esdndtrack
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.drawable.Icon
-import android.opengl.Visibility
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -55,6 +54,10 @@ class Recycler : AppCompatActivity() {
                     fab.setImageResource(R.drawable.add_icon)
                 }
             }
+        }
+        fab.setOnLongClickListener {
+	        startActivity(Intent(this, DiceRoller::class.java))
+	        true
         }
     }
 
@@ -117,7 +120,7 @@ class Recycler : AppCompatActivity() {
             }
 
             healthText.setOnLongClickListener {
-                var SetLevelDialog = Character_Cell.SetLevelDialog(context, healthBar) { bar ->
+                var SetLevelDialog = SetLevelDialog(context, healthBar) { bar ->
                     CopyBarDetails(healthBar, bar, "Health", healthText)
                     SaveToStorage(SavableItem.max_hp, healthBar.max)
                     SaveToStorage(SavableItem.current_hp, healthBar.progress)
@@ -129,7 +132,7 @@ class Recycler : AppCompatActivity() {
             }
 
             magicText.setOnLongClickListener {
-                val SetLevelDialog = Character_Cell.SetLevelDialog(context, magicBar) { bar ->
+                val SetLevelDialog = SetLevelDialog(context, magicBar) { bar ->
                     CopyBarDetails(magicBar, bar, "Magic", magicText)
                     SaveToStorage(SavableItem.max_magic, magicBar.max)
                     SaveToStorage(SavableItem.current_magic, magicBar.progress)
@@ -200,6 +203,48 @@ class Recycler : AppCompatActivity() {
             menu.menu.add(s)
         }
         return menu
+    }
+}
+
+class SetLevelDialog(context: Context, val barToUpdate: ProgressBar, val onChange: (ProgressBar) -> Unit) : Dialog(context)
+{
+
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_level_set)
+
+        val AddButton = findViewById<Button>(R.id.AddToLevel)
+        val SubtractButton = findViewById<Button>(R.id.SubtractFromLevel)
+        val LevelValue = findViewById<TextView>(R.id.LevelText)
+        val DoneButton = findViewById<TextView>(R.id.LevelDismiss)
+
+        LevelValue.text = "${barToUpdate.max}"
+
+        AddButton.setOnClickListener {
+            if (barToUpdate.max >= 0)
+            {
+                barToUpdate.max += 1
+            }
+            LevelValue.text = "${barToUpdate.max}"
+            onChange(barToUpdate)
+        }
+        SubtractButton.setOnClickListener {
+            if (barToUpdate.max > 1)
+            {
+                barToUpdate.max -= 1
+            }
+            LevelValue.text = "${barToUpdate.max}"
+            onChange(barToUpdate)
+        }
+        DoneButton.setOnClickListener {
+            dismiss()
+        }
+    }
+
+    fun SetLevelTitle(title: String)
+    {
+        findViewById<TextView>(R.id.LevelSetText).text = title
     }
 }
 

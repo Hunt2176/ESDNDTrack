@@ -21,8 +21,8 @@
             android:label="@string/title_activity_set_level"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".LevelSet" />
-        <activity android:name=".Character_Cell" />
-        <activity android:name=".CharacterCreater"></activity>
+        <activity android:name=".CharacterCreater" />
+        <activity android:name=".DiceRoller"></activity>
     </application>
 
 </manifest>
