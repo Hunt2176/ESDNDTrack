@@ -8,16 +8,26 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.*
+import kotlinx.android.synthetic.main.activity_recycler.*
 
 class Recycler : AppCompatActivity() {
     var fabIsClicked = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler)
+
+	    setSupportActionBar(toolbar)
+	    supportActionBar?.title = "Elder Scrolls DND"
+
+	    window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+
 
         val recycler = findViewById<RecyclerView>(R.id.CharacterList)
         recycler.adapter = ArrayAdapter(this)
@@ -54,10 +64,6 @@ class Recycler : AppCompatActivity() {
                     fab.setImageResource(R.drawable.add_icon)
                 }
             }
-        }
-        fab.setOnLongClickListener {
-	        startActivity(Intent(this, DiceRoller::class.java))
-	        true
         }
     }
 
