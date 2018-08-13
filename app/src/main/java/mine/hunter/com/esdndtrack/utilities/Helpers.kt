@@ -7,3 +7,12 @@ fun <T:Any> T?.ifNotNull(onNotNull:(T) -> Unit)
 		onNotNull(this)
 	}
 }
+
+fun <T:Any> ifAllNotNull(vararg items: T?, onNoneNull:(Array<T>) -> Unit)
+{
+	for (i in items)
+	{
+		if (i == null) return
+	}
+	onNoneNull(items as Array<T>)
+}

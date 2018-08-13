@@ -9,20 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Recycler">
+        <activity android:name=".Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SetLevel"
-            android:label="@string/title_activity_set_level"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".LevelSet" />
         <activity android:name=".CharacterCreater" />
-        <activity android:name=".DiceRoller"></activity>
+        <activity android:name=".DiceRoller" />
     </application>
 
 </manifest>
