@@ -1,4 +1,4 @@
-package mine.hunter.com.esdndtrack.utilities
+package mine.hunter.com.esdndtrack.Utilities
 
 fun <T:Any> T?.ifNotNull(onNotNull:(T) -> Unit)
 {
@@ -15,6 +15,11 @@ fun <T:Any> ifAllNotNull(vararg items: T?, onNoneNull:(Array<T>) -> Unit)
 		if (i == null) return
 	}
 	onNoneNull(items as Array<T>)
+}
+
+fun Any?.isNull(): Boolean
+{
+	return this == null
 }
 
 fun CharSequence.toIntOrZero():Int {

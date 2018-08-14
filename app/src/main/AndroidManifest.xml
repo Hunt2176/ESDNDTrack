@@ -12,15 +12,14 @@
         <activity android:name=".Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".LevelSet" />
         <activity
             android:name=".CharacterCreater"
-            android:windowSoftInputMode="adjustResize"
-            />
-        <activity android:name=".DiceRoller" />
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

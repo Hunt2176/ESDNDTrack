@@ -10,8 +10,8 @@ import android.text.TextWatcher
 import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
-import mine.hunter.com.esdndtrack.utilities.SavableItem
-import mine.hunter.com.esdndtrack.utilities.toIntOrZero
+import mine.hunter.com.esdndtrack.Utilities.SavableItem
+import mine.hunter.com.esdndtrack.Utilities.toIntOrZero
 
 class CharacterCreater : AppCompatActivity()
 {

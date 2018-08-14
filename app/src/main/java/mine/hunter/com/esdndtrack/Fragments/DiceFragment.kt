@@ -15,10 +15,10 @@ import android.widget.ImageButton
 import android.widget.TextView
 import kotlinx.android.synthetic.main.dice_recycler.*
 import mine.hunter.com.esdndtrack.R
-import mine.hunter.com.esdndtrack.utilities.ArraySlider
-import mine.hunter.com.esdndtrack.utilities.Dice
-import mine.hunter.com.esdndtrack.utilities.StandardDice
-import mine.hunter.com.esdndtrack.utilities.toIntOrZero
+import mine.hunter.com.esdndtrack.Utilities.ArraySlider
+import mine.hunter.com.esdndtrack.Utilities.Dice
+import mine.hunter.com.esdndtrack.Utilities.StandardDice
+import mine.hunter.com.esdndtrack.Utilities.toIntOrZero
 
 class DiceFragment: Fragment()
 {

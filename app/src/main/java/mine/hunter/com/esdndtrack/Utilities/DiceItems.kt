@@ -1,4 +1,4 @@
-package mine.hunter.com.esdndtrack.utilities
+package mine.hunter.com.esdndtrack.Utilities
 import java.util.Random
 
 class Dice(val sides: Int)

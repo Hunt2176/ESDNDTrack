@@ -3,7 +3,6 @@ package mine.hunter.com.esdndtrack
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Binder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -13,21 +12,21 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
-import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
-import mine.hunter.com.esdndtrack.Fragments.Characters
-import mine.hunter.com.esdndtrack.Fragments.Dice
+import mine.hunter.com.esdndtrack.Fragments.CharactersFragment
 import mine.hunter.com.esdndtrack.Fragments.DiceFragment
-import mine.hunter.com.esdndtrack.utilities.CreateCharacterMenu
-import mine.hunter.com.esdndtrack.utilities.SavableItem
-import mine.hunter.com.esdndtrack.utilities.ifNotNull
+import mine.hunter.com.esdndtrack.Fragments.SpellsFragment
+import mine.hunter.com.esdndtrack.Utilities.*
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
-class Main : AppCompatActivity(), Characters.OnFragmentInteractionListener, Dice.OnFragmentInteractionListener
+class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListener
 {
 	private var fab: FloatingActionButton? = null
 	private var currentTab = 0
+	private var spellList = arrayOf<ReadInSpell>()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -40,7 +39,8 @@ class Main : AppCompatActivity(), Characters.OnFragmentInteractionListener, Dice
 		fab = MainFAB
 
 		val pager = findViewById<ViewPager>(R.id.TabPager)
-		pager.adapter = PageAdapter(supportFragmentManager)
+		pager.adapter = PageAdapter(supportFragmentManager,
+				GSONHelper().readInSpells(BufferedReader(InputStreamReader(resources.openRawResource(R.raw.spellsource))).readText()))
 
 		pager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
 			override fun onPageScrollStateChanged(state: Int)
@@ -51,8 +51,8 @@ class Main : AppCompatActivity(), Characters.OnFragmentInteractionListener, Dice
 			override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int)
 			{
 				MainTabBar.setScrollPosition(position, positionOffset, false)
-				val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 				this@Main.currentFocus.ifNotNull {
+					val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 					imm.hideSoftInputFromWindow(it.windowToken, 0)
 				}
 			}
@@ -62,6 +62,7 @@ class Main : AppCompatActivity(), Characters.OnFragmentInteractionListener, Dice
 				when (position){
 					0 -> MainFAB.show()
 					1 -> MainFAB.hide()
+					2 -> MainFAB.hide()
 				}
 				currentTab = position
 			}
@@ -108,7 +109,7 @@ class Main : AppCompatActivity(), Characters.OnFragmentInteractionListener, Dice
 												Context.MODE_PRIVATE))
 								charMenu.show()
 								charMenu.setOnMenuItemClickListener{ charItem ->
-									((pager.adapter as PageAdapter).fragments[0] as Characters)
+									((pager.adapter as PageAdapter).fragments[0] as CharactersFragment)
 											.addToCharacterList(charItem.title.toString())
 
 									true
@@ -135,18 +136,19 @@ class Main : AppCompatActivity(), Characters.OnFragmentInteractionListener, Dice
 }
 
 
-class PageAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager)
+class PageAdapter(fragmentManager: FragmentManager, private val spells: Array<ReadInSpell>): FragmentPagerAdapter(fragmentManager)
 {
 	var fragments = ArrayList<Fragment>()
 	override fun getItem(position: Int): Fragment
 	{
 		val fragmentToReturn = when (position)
 		{
-			0 -> Characters()
+			0 -> CharactersFragment()
 			1 -> DiceFragment()
+			2 -> SpellsFragment.create(spells)
 			else ->
 			{
-				Characters()
+				CharactersFragment()
 			}
 		}
 		fragments.add(fragmentToReturn)

@@ -4,75 +4,53 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
-import mine.hunter.com.esdndtrack.R
-import mine.hunter.com.esdndtrack.utilities.ArraySlider
-import mine.hunter.com.esdndtrack.utilities.Dice
-import mine.hunter.com.esdndtrack.utilities.StandardDice
-import mine.hunter.com.esdndtrack.utilities.toIntOrZero
+import kotlinx.android.synthetic.main.fragment_characters.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import mine.hunter.com.esdndtrack.R
+import mine.hunter.com.esdndtrack.Utilities.ArrayAdapter
+import mine.hunter.com.esdndtrack.Utilities.ifNotNull
+
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [Dice.OnFragmentInteractionListener] interface
+ * [CharactersFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [Dice.newInstance] factory method to
+ * Use the [CharactersFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class Dice : Fragment()
+class CharactersFragment : Fragment()
 {
+	private var recycler: RecyclerView? = null
 	private var listener: OnFragmentInteractionListener? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 
+
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View?
 	{
-		val slider = ArraySlider(StandardDice.availableSides)
-		val view = inflater.inflate(R.layout.dice_roller, container, false)
+		// Inflate the layout for this fragment
+		val viewToReturn = inflater.inflate(R.layout.fragment_characters, container, false)
 
-		val leftButton = view.findViewById<ImageButton>(R.id.DiceSwitchLeft)
-		val rightButton = view.findViewById<ImageButton>(R.id.DiceSwitchRight)
-		val diceInput = view.findViewById<EditText>(R.id.DiceSideInput)
-		val numToRollView = view.findViewById<EditText>(R.id.NumberToRoll)
-		val rollOutButton = view.findViewById<Button>(R.id.RollDiceButton)
-		val resultView = view.findViewById<TextView>(R.id.RollResult)
-
-		diceInput.setText("${slider.getCurrentItem()}")
-
-		leftButton.setOnClickListener {
-			diceInput.setText("${slider.moveLeft()}")
+		viewToReturn.ifNotNull {
+			recycler = it.findViewById(R.id.CharacterList)
+			recycler?.adapter = ArrayAdapter(it.context)
+			recycler?.layoutManager = GridLayoutManager(it.context, 1)
+			recycler?.addItemDecoration(DividerItemDecoration(it.context, DividerItemDecoration.VERTICAL))
 		}
-		rightButton.setOnClickListener {
-			diceInput.setText("${slider.moveRight()}")
-		}
-
-		rollOutButton.setOnClickListener {
-			var numberToRoll = numToRollView.text.toIntOrZero()
-			if (numberToRoll == 0)
-			{
-				numberToRoll = 1
-			}
-			resultView.text = Dice(diceInput.text.toIntOrZero()).rollMultiple(numberToRoll).toString()
-		}
-
-		return view
+		return viewToReturn
 	}
 
 	override fun onAttach(context: Context)
@@ -91,6 +69,15 @@ class Dice : Fragment()
 	{
 		super.onDetach()
 		listener = null
+	}
+
+	fun addToCharacterList(name: String)
+	{
+		(recycler?.adapter as? ArrayAdapter).ifNotNull {
+			it.characters.add(name)
+			it.notifyDataSetChanged()
+			NoLoadTextView.visibility = View.INVISIBLE
+		}
 	}
 
 	/**
@@ -119,12 +106,12 @@ class Dice : Fragment()
 		 *
 		 * @param param1 Parameter 1.
 		 * @param param2 Parameter 2.
-		 * @return A new instance of fragment Dice.
+		 * @return A new instance of fragment CharactersFragment.
 		 */
 		// TODO: Rename and change types and number of parameters
 		@JvmStatic
 		fun newInstance(param1: String, param2: String) =
-				Dice().apply {
+				CharactersFragment().apply {
 					arguments = Bundle().apply {
 						putString(ARG_PARAM1, param1)
 						putString(ARG_PARAM2, param2)
