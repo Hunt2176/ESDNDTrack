@@ -5,7 +5,13 @@ class Dice(val sides: Int)
 {
 	fun rollDice(): Int
 	{
-		return Random().nextInt(sides - 1) + 1
+		return try
+		{
+			Random().nextInt(sides) + 1
+		} catch (exc: IllegalArgumentException)
+		{
+			0
+		}
 	}
 	
 	fun rollMultiple(times: Int): Int
@@ -21,7 +27,7 @@ class Dice(val sides: Int)
 
 enum class StandardDice
 {
-	d4,d6,d8,d10,d20;
+	d4,d6,d8,d10,d12,d20;
 	
 	private fun getSides(): Int
 	{
@@ -31,12 +37,13 @@ enum class StandardDice
 			d6 -> 6
 			d8 -> 8
 			d10 -> 10
+			d12 -> 12
 			d20 -> 20
 		}
 	}
 
 	companion object {
-	    val availableSides = arrayOf(4,6,8,10,20)
+	    val availableSides = arrayOf(4,6,8,10,12,20)
 	}
 	
 	fun roll(): Int

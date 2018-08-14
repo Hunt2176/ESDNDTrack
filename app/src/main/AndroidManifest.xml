@@ -16,7 +16,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".LevelSet" />
-        <activity android:name=".CharacterCreater" />
+        <activity
+            android:name=".CharacterCreater"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity android:name=".DiceRoller" />
     </application>
 

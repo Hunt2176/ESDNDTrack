@@ -12,10 +12,10 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import mine.hunter.com.esdndtrack.R
-import mine.hunter.com.esdndtrack.toIntOrZero
 import mine.hunter.com.esdndtrack.utilities.ArraySlider
 import mine.hunter.com.esdndtrack.utilities.Dice
 import mine.hunter.com.esdndtrack.utilities.StandardDice
+import mine.hunter.com.esdndtrack.utilities.toIntOrZero
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

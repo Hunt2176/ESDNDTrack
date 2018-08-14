@@ -11,6 +11,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import mine.hunter.com.esdndtrack.utilities.SavableItem
+import mine.hunter.com.esdndtrack.utilities.toIntOrZero
 
 class CharacterCreater : AppCompatActivity()
 {
@@ -100,17 +101,4 @@ class CharacterCreater : AppCompatActivity()
             this.setImageResource(R.drawable.cancel)
         }
     }
-}
-
-fun CharSequence.toIntOrZero():Int {
-    return this.toString().toIntOrZero()
-}
-
-fun String.toIntOrZero(): Int
-{
-    var tempString = ""
-    this.forEach {
-        if (it.isDigit()) tempString += it
-    }
-    return if (tempString.isEmpty()) 0 else tempString.toInt()
 }

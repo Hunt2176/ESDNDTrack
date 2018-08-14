@@ -16,3 +16,12 @@ fun <T:Any> ifAllNotNull(vararg items: T?, onNoneNull:(Array<T>) -> Unit)
 	}
 	onNoneNull(items as Array<T>)
 }
+
+fun CharSequence.toIntOrZero():Int {
+	return this.toString().toIntOrZero()
+}
+
+fun String.toIntOrZero(): Int
+{
+	return if (this.toIntOrNull() == null) 0 else this.toInt()
+}

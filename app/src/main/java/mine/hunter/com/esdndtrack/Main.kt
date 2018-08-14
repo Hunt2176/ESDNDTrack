@@ -3,6 +3,7 @@ package mine.hunter.com.esdndtrack
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Binder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -12,10 +13,13 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import android.view.LayoutInflater
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
 import mine.hunter.com.esdndtrack.Fragments.Characters
 import mine.hunter.com.esdndtrack.Fragments.Dice
+import mine.hunter.com.esdndtrack.Fragments.DiceFragment
 import mine.hunter.com.esdndtrack.utilities.CreateCharacterMenu
 import mine.hunter.com.esdndtrack.utilities.SavableItem
 import mine.hunter.com.esdndtrack.utilities.ifNotNull
@@ -47,6 +51,10 @@ class Main : AppCompatActivity(), Characters.OnFragmentInteractionListener, Dice
 			override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int)
 			{
 				MainTabBar.setScrollPosition(position, positionOffset, false)
+				val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+				this@Main.currentFocus.ifNotNull {
+					imm.hideSoftInputFromWindow(it.windowToken, 0)
+				}
 			}
 
 			override fun onPageSelected(position: Int)
@@ -135,7 +143,7 @@ class PageAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(fragme
 		val fragmentToReturn = when (position)
 		{
 			0 -> Characters()
-			1 -> Dice()
+			1 -> DiceFragment()
 			else ->
 			{
 				Characters()
