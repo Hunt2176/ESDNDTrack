@@ -98,9 +98,9 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 					menu.setOnMenuItemClickListener { item ->
 						when (item.itemId)
 						{
-							R.id.MENUCreateCharacter ->
+							R.id.MENUManageCharacter ->
 							{
-								startActivity(Intent(this, CharacterCreater::class.java))
+								startActivity(Intent(this, CharacterManager::class.java))
 							}
 							R.id.MENULoadCharacter ->
 							{
