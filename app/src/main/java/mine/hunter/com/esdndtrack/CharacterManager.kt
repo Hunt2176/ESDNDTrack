@@ -1,6 +1,7 @@
 package mine.hunter.com.esdndtrack
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -14,21 +15,34 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
+import kotlinx.android.synthetic.main.character_manager.*
 import mine.hunter.com.esdndtrack.Utilities.SavableItem
 import mine.hunter.com.esdndtrack.Utilities.ifNotNull
 
 class CharacterManager: AppCompatActivity()
 {
+	private var recycler: RecyclerView? = null
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.character_manager)
 		window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
-		val recycler = findViewById<RecyclerView>(R.id.CharacterManageRecycler)
-		recycler.adapter = CharacterManageAdapter(this)
-		recycler.layoutManager = GridLayoutManager(this, 1)
-		recycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+		recycler = findViewById(R.id.CharacterManageRecycler)
+		recycler?.adapter = CharacterManageAdapter(this)
+		recycler?.layoutManager = GridLayoutManager(this, 1)
+		recycler?.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+		AddCharacterButton.setOnClickListener {
+			startActivity(Intent(this, CharacterCreater::class.java))
+		}
+	}
+
+	override fun onResume()
+	{
+		super.onResume()
+		recycler?.adapter = CharacterManageAdapter(this)
+
 	}
 }
 
