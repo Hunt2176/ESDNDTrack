@@ -86,6 +86,10 @@ class CharacterManageAdapter(val context: Context): RecyclerView.Adapter<Charact
 						//TODO: Fix issue when removing item and then removing an item before the deleted one
 						this.names.removeAt(position)
 						this.notifyItemRemoved(position)
+						val charList = context.getSharedPreferences(SavableItem.character_list.getStringKey(), Context.MODE_PRIVATE)
+						val charListEditor = charList.edit()
+						charListEditor.putStringSet("names", names.toSet())
+						charListEditor.apply()
 					}
 
 					R.id.MENUModifyCharacter ->

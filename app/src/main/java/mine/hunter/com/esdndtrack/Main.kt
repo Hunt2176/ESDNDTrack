@@ -26,7 +26,6 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 {
 	private var fab: FloatingActionButton? = null
 	private var currentTab = 0
-	private var spellList = arrayOf<ReadInSpell>()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -38,9 +37,11 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 		fab = MainFAB
 
+		StaticVariables.spellList = GSONHelper().readInSpells(BufferedReader(InputStreamReader(resources.openRawResource(R.raw.spellsource))).readText())
+
 		val pager = findViewById<ViewPager>(R.id.TabPager)
-		pager.adapter = PageAdapter(supportFragmentManager,
-				GSONHelper().readInSpells(BufferedReader(InputStreamReader(resources.openRawResource(R.raw.spellsource))).readText()))
+		pager.adapter = PageAdapter(supportFragmentManager)
+		pager.offscreenPageLimit = 3
 
 		pager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
 			override fun onPageScrollStateChanged(state: Int)
@@ -135,8 +136,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 	}
 }
 
-
-class PageAdapter(fragmentManager: FragmentManager, private val spells: Array<ReadInSpell>): FragmentPagerAdapter(fragmentManager)
+class PageAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager)
 {
 	var fragments = ArrayList<Fragment>()
 	override fun getItem(position: Int): Fragment
@@ -145,7 +145,7 @@ class PageAdapter(fragmentManager: FragmentManager, private val spells: Array<Re
 		{
 			0 -> CharactersFragment()
 			1 -> DiceFragment()
-			2 -> SpellsFragment.create(spells)
+			2 -> SpellsFragment.create()
 			else ->
 			{
 				CharactersFragment()

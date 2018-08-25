@@ -20,10 +20,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_spells.*
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.SpellDetailDialog
-import mine.hunter.com.esdndtrack.Utilities.GSONHelper
-import mine.hunter.com.esdndtrack.Utilities.ReadInSpell
-import mine.hunter.com.esdndtrack.Utilities.ifNotNull
-import mine.hunter.com.esdndtrack.Utilities.isNull
+import mine.hunter.com.esdndtrack.Utilities.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -31,16 +28,15 @@ class SpellsFragment: Fragment()
 {
 
 	var recycler: RecyclerView? = null
-	var spells = arrayOf<ReadInSpell>()
 	var theView: View? = null
 
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
 	{
-		if (!theView.isNull()) return theView
+//		if (!theView.isNull()) return theView
 		val newView = inflater.inflate(R.layout.fragment_spells, container, false)
 		recycler = newView.findViewById(R.id.SpellsRecycle)
-		recycler?.adapter = SpellsArrayAdapter(newView.context, spells)
+		recycler?.adapter = SpellsArrayAdapter(newView.context)
 		recycler?.layoutManager = GridLayoutManager(newView.context, 1)
 		recycler?.addItemDecoration(DividerItemDecoration(newView.context, DividerItemDecoration.VERTICAL))
 
@@ -58,8 +54,9 @@ class SpellsFragment: Fragment()
 
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
 			{
+
 				if (context.isNull() || s.isNull() || recycler.isNull()) return
-				val newSpellList = spells.filter { it.name.toLowerCase().contains(s!!.toString().toLowerCase()) }
+				val newSpellList = StaticVariables.spellList.filter { it.name.toLowerCase().contains(s!!.toString().toLowerCase()) }
 				recycler!!.adapter = SpellsArrayAdapter(context!!, newSpellList.toTypedArray())
 			}
 		})
@@ -71,10 +68,9 @@ class SpellsFragment: Fragment()
 
 	companion object
 	{
-		fun create(spells: Array<ReadInSpell>): SpellsFragment
+		fun create(): SpellsFragment
 		{
 			val toReturn = SpellsFragment()
-			toReturn.spells = spells
 
 			return toReturn
 
@@ -82,7 +78,7 @@ class SpellsFragment: Fragment()
 	}
 }
 
-class SpellsArrayAdapter(val context: Context, var readInSpells: Array<ReadInSpell>? = null): RecyclerView.Adapter<SpellViewHolder>()
+class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell> = StaticVariables.spellList): RecyclerView.Adapter<SpellViewHolder>()
 {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpellViewHolder
@@ -93,12 +89,12 @@ class SpellsArrayAdapter(val context: Context, var readInSpells: Array<ReadInSpe
 
 	override fun getItemCount(): Int
 	{
-		return if (readInSpells.isNull()) 0 else readInSpells!!.size
+		return if (spellList.isNull()) 0 else spellList.size
 	}
 
 	override fun onBindViewHolder(holder: SpellViewHolder, position: Int)
 	{
-		readInSpells.ifNotNull {
+		spellList.ifNotNull {
 			holder.spellNameView.text = it[position].name
 			holder.itemView.setOnTouchListener { v, event ->
 				when (event.action)
