@@ -2,7 +2,10 @@ package mine.hunter.com.esdndtrack
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
@@ -26,6 +29,14 @@ class CharacterManager: AppCompatActivity()
 	{
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.character_manager)
+		setSupportActionBar(ManageCharacterToolbar)
+
+		supportActionBar?.elevation = 8F
+		val arrow = ContextCompat.getDrawable(this, R.drawable.arrow_backward)
+		arrow?.setColorFilter(ContextCompat.getColor(this, android.R.color.white), PorterDuff.Mode.SRC_ATOP)
+		supportActionBar?.setHomeAsUpIndicator(arrow)
+		supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 		window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
 		recycler = findViewById(R.id.CharacterManageRecycler)
@@ -34,8 +45,17 @@ class CharacterManager: AppCompatActivity()
 		recycler?.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
 		AddCharacterButton.setOnClickListener {
-			startActivity(Intent(this, CharacterCreater::class.java))
+//			startActivity(Intent(this, CharacterCreater::class.java))
+			val charCreateDialog = CharacterCreater(this, {addedchar -> if (addedchar) {onResume()}})
+			charCreateDialog.show()
+			charCreateDialog?.window.setLayout((6 * resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 		}
+	}
+
+	override fun onSupportNavigateUp(): Boolean
+	{
+		onBackPressed()
+		return true
 	}
 
 	override fun onResume()
@@ -99,6 +119,10 @@ class CharacterManageAdapter(val context: Context): RecyclerView.Adapter<Charact
 				}
 				true
 			}
+		}
+		holder.itemView.setOnLongClickListener {
+			holder.overflowButton.callOnClick()
+			true
 		}
 	}
 }

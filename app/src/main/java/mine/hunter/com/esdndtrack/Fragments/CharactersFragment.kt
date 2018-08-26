@@ -17,15 +17,6 @@ import mine.hunter.com.esdndtrack.Utilities.ArrayAdapter
 import mine.hunter.com.esdndtrack.Utilities.ifNotNull
 
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [CharactersFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [CharactersFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class CharactersFragment : Fragment()
 {
 	private var recycler: RecyclerView? = null

@@ -27,26 +27,24 @@
         android:id="@+id/UseManaCreateBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
         android:buttonTint="@android:color/holo_blue_dark"
         android:checked="false"
-        android:text="Uses Mana"
-        app:layout_constraintBottom_toBottomOf="@+id/ManaCreateInput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ManaCreateInput" />
+        android:text="Uses Magic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ACCreateInput" />
 
     <EditText
         android:id="@+id/HealthCreateInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@android:color/holo_red_dark"
         android:ems="10"
         android:hint="Health"
         android:inputType="number"
-        app:layout_constraintEnd_toEndOf="@+id/ManaCreateInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/NameCreateInput" />
 
@@ -54,21 +52,19 @@
         android:id="@+id/ManaCreateInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@android:color/holo_blue_dark"
         android:ems="10"
         android:hint="Magic Points"
         android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/UseManaCreateBox"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HealthCreateInput" />
+        app:layout_constraintTop_toBottomOf="@+id/UseManaCreateBox" />
 
     <EditText
         android:id="@+id/ACCreateInput"
-        android:layout_width="107dp"
-        android:layout_height="45dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@android:color/holo_orange_dark"
@@ -76,11 +72,11 @@
         android:hint="AC"
         android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SpellBonusCreateInput" />
+        app:layout_constraintTop_toBottomOf="@+id/HealthCreateInput" />
 
     <EditText
         android:id="@+id/SpellBonusCreateInput"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -88,6 +84,7 @@
         android:ems="10"
         android:hint="Spell Cast Modifier"
         android:inputType="numberSigned"
+        app:layout_constraintEnd_toEndOf="@+id/ManaCreateInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ManaCreateInput" />
 

@@ -116,7 +116,7 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 						dialog.spellDescView.text = Html.fromHtml("<br>${it[position].desc}", Html.FROM_HTML_MODE_LEGACY)
 						dialog.spellLevelView.text = Html.fromHtml("<b>Level</b><br>${it[position].level}", Html.FROM_HTML_MODE_LEGACY)
 						dialog.spellRangeView.text = Html.fromHtml("<b>Range</b><br>${it[position].range}", Html.FROM_HTML_MODE_LEGACY)
-						dialog.window.setLayout((6 * v.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+						dialog.window?.setLayout((6 * v.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 
 
 					}

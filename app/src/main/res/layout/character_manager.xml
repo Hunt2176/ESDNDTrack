@@ -26,7 +26,7 @@
         app:layout_constraintBottom_toTopOf="@+id/ManagerToolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/ManageCharacterToolbar" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/AddCharacterButton"
@@ -42,4 +42,18 @@
         app:layout_constraintHorizontal_bias="0.977"
         app:layout_constraintStart_toStartOf="@+id/ManagerToolbar"
         app:srcCompat="@drawable/add_person" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/ManageCharacterToolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        android:backgroundTint="@color/colorPrimary"
+        app:title="Manage Characters"
+        app:titleTextColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

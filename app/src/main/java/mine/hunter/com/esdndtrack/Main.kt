@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
@@ -26,6 +27,12 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 {
 	private var fab: FloatingActionButton? = null
 	private var currentTab = 0
+	private var pager: ViewPager? = null
+
+	override fun onResume()
+	{
+		super.onResume()
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -39,11 +46,12 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 
 		StaticVariables.spellList = GSONHelper().readInSpells(BufferedReader(InputStreamReader(resources.openRawResource(R.raw.spellsource))).readText())
 
-		val pager = findViewById<ViewPager>(R.id.TabPager)
-		pager.adapter = PageAdapter(supportFragmentManager)
-		pager.offscreenPageLimit = 3
 
-		pager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+		pager = findViewById(R.id.TabPager)
+		pager?.adapter = PageAdapter(supportFragmentManager)
+		pager?.offscreenPageLimit = 3
+
+		pager?.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
 			override fun onPageScrollStateChanged(state: Int)
 			{
 
@@ -69,10 +77,10 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 			}
 		})
 
-		MainTabBar.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
+		MainTabBar.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
 			override fun onTabReselected(tab: TabLayout.Tab?)
 			{
-				tab.ifNotNull { pager.currentItem = it.position }
+				tab.ifNotNull { pager?.currentItem = it.position }
 			}
 
 			override fun onTabUnselected(tab: TabLayout.Tab?)
@@ -82,7 +90,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 
 			override fun onTabSelected(tab: TabLayout.Tab?)
 			{
-				tab.ifNotNull { pager.currentItem = it.position }
+				tab.ifNotNull { pager?.currentItem = it.position }
 			}
 		})
 
@@ -110,7 +118,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 												Context.MODE_PRIVATE))
 								charMenu.show()
 								charMenu.setOnMenuItemClickListener{ charItem ->
-									((pager.adapter as PageAdapter).fragments[0] as CharactersFragment)
+									((pager?.adapter as PageAdapter).getItem(0) as CharactersFragment)
 											.addToCharacterList(charItem.title.toString())
 
 									true
@@ -136,11 +144,14 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 	}
 }
 
-class PageAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager)
+class PageAdapter(private val fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager)
 {
-	var fragments = ArrayList<Fragment>()
 	override fun getItem(position: Int): Fragment
 	{
+		if (fragmentManager.fragments.size != 0 && position <= fragmentManager.fragments.size)
+		{
+			return fragmentManager.fragments[position]
+		}
 		val fragmentToReturn = when (position)
 		{
 			0 -> CharactersFragment()
@@ -151,7 +162,6 @@ class PageAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(fragme
 				CharactersFragment()
 			}
 		}
-		fragments.add(fragmentToReturn)
 		return fragmentToReturn
 	}
 

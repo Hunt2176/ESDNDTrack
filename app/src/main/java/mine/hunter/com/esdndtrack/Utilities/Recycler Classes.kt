@@ -139,7 +139,7 @@ class CharacterViewRecycle(view: View, val context: Context) : RecyclerView.View
 		characterName.text = name
 		val preferences = context.getSharedPreferences(name, Context.MODE_PRIVATE)
 
-		arrayOf("max_hp", "current_hp", "max_magic", "current_magic", "uses_magic")
+		arrayOf("max_hp", "current_hp", "max_magic", "current_magic", "uses_magic", "character_ac")
 				.forEach { item ->
 					when (item)
 					{
@@ -157,6 +157,7 @@ class CharacterViewRecycle(view: View, val context: Context) : RecyclerView.View
 								magicSubtract.visibility = View.GONE
 							}
 						}
+						"character_ac" -> itemView.findViewById<TextView>(R.id.ACTextView).text = "AC: ${preferences.getInt(SavableItem.character_ac.getStringKey(), 0)}"
 					}
 				}
 		healthText.text = "Health: ${healthBar.progress}/${healthBar.max}"

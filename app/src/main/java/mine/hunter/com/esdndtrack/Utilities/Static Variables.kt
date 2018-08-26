@@ -4,6 +4,7 @@ class StaticVariables
 {
 	companion object
 	{
+		var staticMap = mutableMapOf<String, Any>()
 		var spellList = arrayOf<ReadInSpell>()
 	}
 }
