@@ -100,4 +100,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="@android:color/holo_green_light"
         app:srcCompat="@drawable/check_mark" />
+
 </android.support.constraint.ConstraintLayout>

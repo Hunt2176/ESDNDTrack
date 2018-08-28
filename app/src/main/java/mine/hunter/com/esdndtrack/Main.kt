@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -12,12 +13,16 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
 import mine.hunter.com.esdndtrack.Fragments.CharactersFragment
 import mine.hunter.com.esdndtrack.Fragments.DiceFragment
+import mine.hunter.com.esdndtrack.Fragments.SpellsArrayAdapter
 import mine.hunter.com.esdndtrack.Fragments.SpellsFragment
 import mine.hunter.com.esdndtrack.Utilities.*
 import java.io.BufferedReader
@@ -29,9 +34,40 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 	private var currentTab = 0
 	private var pager: ViewPager? = null
 
-	override fun onResume()
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean
 	{
-		super.onResume()
+
+		when (pager?.currentItem)
+		{
+			2 ->
+			{
+				menuInflater.inflate(R.menu.spellbook_overflow, menu)
+				return true
+			}
+
+		}
+		return false
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean
+	{
+		val dialog = CreateSpellDialog(this) {
+			if (it)
+			{
+				StaticItems.ReadInSpellList(resources)
+				StaticItems.ReadInCustomSpellList(this)
+
+				StaticItems.spellList.toMutableList()
+						.use { mutableList -> mutableList.addAll(0, StaticItems.customSpellList.toList()); StaticItems.spellList = mutableList.toTypedArray() }
+
+
+				(((pager?.adapter as PageAdapter).getItem(2) as SpellsFragment).recycler?.adapter as SpellsArrayAdapter).spellList = StaticItems.spellList
+				((pager?.adapter as PageAdapter).getItem(2) as SpellsFragment).recycler?.adapter?.notifyDataSetChanged()
+			}
+		}
+		dialog.show()
+		dialog.window?.setLayout((6 * resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+		return true
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?)
@@ -41,10 +77,15 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		setSupportActionBar(toolbar)
 
 		supportActionBar?.title = "ES DND"
+
 		window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 		fab = MainFAB
 
-		StaticVariables.spellList = GSONHelper().readInSpells(BufferedReader(InputStreamReader(resources.openRawResource(R.raw.spellsource))).readText())
+		StaticItems.ReadInSpellList(resources)
+		StaticItems.ReadInCustomSpellList(this)
+
+		StaticItems.spellList.toMutableList()
+				.use { it.addAll(0, StaticItems.customSpellList.toList()); StaticItems.spellList = it.toTypedArray() }
 
 
 		pager = findViewById(R.id.TabPager)
@@ -74,6 +115,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 					2 -> MainFAB.hide()
 				}
 				currentTab = position
+				this@Main.invalidateOptionsMenu()
 			}
 		})
 

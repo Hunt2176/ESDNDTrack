@@ -12,6 +12,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import mine.hunter.com.esdndtrack.Utilities.SavableItem
+import mine.hunter.com.esdndtrack.Utilities.isReadyForComplete
 import mine.hunter.com.esdndtrack.Utilities.toIntOrZero
 
 class CharacterCreater(context: Context, val onDismiss: (Boolean)->Unit) : Dialog(context)
@@ -49,6 +50,7 @@ class CharacterCreater(context: Context, val onDismiss: (Boolean)->Unit) : Dialo
            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
            {
                floatingComplete.isReadyForComplete(!s.isNullOrEmpty())
+	           ready = !s.isNullOrEmpty()
            }
 
        })
@@ -97,20 +99,6 @@ class CharacterCreater(context: Context, val onDismiss: (Boolean)->Unit) : Dialo
 	            onDismiss(true)
                 onBackPressed()
             }
-        }
-    }
-
-    fun FloatingActionButton.isReadyForComplete(isEnabled: Boolean)
-    {
-        if (isEnabled){
-            this.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_green_dark))
-            this.setImageResource(R.drawable.check_mark)
-            ready = true
-        }
-        else {
-            this.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark))
-            this.setImageResource(R.drawable.cancel)
-            ready = false
         }
     }
 }

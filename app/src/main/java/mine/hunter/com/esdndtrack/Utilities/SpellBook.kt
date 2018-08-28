@@ -42,7 +42,7 @@ class Spell(name: String, description: String, level: Int, element: String? = nu
 
 }
 
-class ReadInSpell(name: String, desc: String, range: String, duration: String, level: String, ritual: String, casting_time: String){
+open class ReadInSpell(name: String, desc: String, range: String, duration: String, level: String, ritual: String, casting_time: String, custom: Boolean = false){
     val name = name
     val desc = desc
     val range = range
@@ -50,4 +50,5 @@ class ReadInSpell(name: String, desc: String, range: String, duration: String, l
     val level = level
     val ritual = ritual
     val casting_time = casting_time
+    var custom = custom
 }

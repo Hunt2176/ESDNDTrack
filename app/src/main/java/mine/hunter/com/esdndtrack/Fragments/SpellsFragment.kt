@@ -1,7 +1,6 @@
 package mine.hunter.com.esdndtrack.Fragments
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
@@ -16,13 +15,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
-import kotlinx.android.synthetic.main.fragment_spells.*
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.SpellDetailDialog
 import mine.hunter.com.esdndtrack.Utilities.*
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class SpellsFragment: Fragment()
 {
@@ -33,7 +30,6 @@ class SpellsFragment: Fragment()
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
 	{
-//		if (!theView.isNull()) return theView
 		val newView = inflater.inflate(R.layout.fragment_spells, container, false)
 		recycler = newView.findViewById(R.id.SpellsRecycle)
 		recycler?.adapter = SpellsArrayAdapter(newView.context)
@@ -56,7 +52,7 @@ class SpellsFragment: Fragment()
 			{
 
 				if (context.isNull() || s.isNull() || recycler.isNull()) return
-				val newSpellList = StaticVariables.spellList.filter { it.name.toLowerCase().contains(s!!.toString().toLowerCase()) }
+				val newSpellList = StaticItems.spellList.filter { it.name.toLowerCase().contains(s!!.toString().toLowerCase()) }
 				recycler!!.adapter = SpellsArrayAdapter(context!!, newSpellList.toTypedArray())
 			}
 		})
@@ -78,7 +74,7 @@ class SpellsFragment: Fragment()
 	}
 }
 
-class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell> = StaticVariables.spellList): RecyclerView.Adapter<SpellViewHolder>()
+class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell> = StaticItems.spellList): RecyclerView.Adapter<SpellViewHolder>()
 {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpellViewHolder
@@ -96,6 +92,8 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 	{
 		spellList.ifNotNull {
 			holder.spellNameView.text = it[position].name
+			if (it[position].custom) holder.customSpellButton.visibility = View.VISIBLE
+			else holder.customSpellButton.visibility = View.GONE
 			holder.itemView.setOnTouchListener { v, event ->
 				when (event.action)
 				{
@@ -131,4 +129,5 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 class SpellViewHolder(view: View): RecyclerView.ViewHolder(view)
 {
 	val spellNameView: TextView = view.findViewById(R.id.SpellName)
+	val customSpellButton: ImageButton = view.findViewById(R.id.customSpell_button)
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/MENU_create_spell"
+        android:icon="@drawable/add_icon"
+        android:title="Create Spell"
+        android:visible="true"
+        app:showAsAction="always" />
+</menu>
