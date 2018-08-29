@@ -14,9 +14,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
@@ -25,8 +23,6 @@ import mine.hunter.com.esdndtrack.Fragments.DiceFragment
 import mine.hunter.com.esdndtrack.Fragments.SpellsArrayAdapter
 import mine.hunter.com.esdndtrack.Fragments.SpellsFragment
 import mine.hunter.com.esdndtrack.Utilities.*
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListener
 {
@@ -194,7 +190,7 @@ class PageAdapter(private val fragmentManager: FragmentManager): FragmentPagerAd
 		{
 			return fragmentManager.fragments[position]
 		}
-		val fragmentToReturn = when (position)
+		return when (position)
 		{
 			0 -> CharactersFragment()
 			1 -> DiceFragment()
@@ -204,7 +200,6 @@ class PageAdapter(private val fragmentManager: FragmentManager): FragmentPagerAd
 				CharactersFragment()
 			}
 		}
-		return fragmentToReturn
 	}
 
 	override fun getCount(): Int = 3

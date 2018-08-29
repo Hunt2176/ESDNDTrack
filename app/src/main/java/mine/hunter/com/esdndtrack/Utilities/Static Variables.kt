@@ -5,6 +5,7 @@ import android.content.res.Resources
 import mine.hunter.com.esdndtrack.R
 import java.io.BufferedReader
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.InputStreamReader
 
 class StaticItems
@@ -22,7 +23,17 @@ class StaticItems
 
 		fun ReadInCustomSpellList(context: Context)
 		{
-			customSpellList = GSONHelper().readInSpells(File(context.filesDir, "customspells.json").readText())
+			try
+			{
+				customSpellList = GSONHelper().readInSpells(File(context.filesDir, "customspells.json").readText())
+			}
+			catch (error: FileNotFoundException)
+			{
+				File(context.filesDir, "customspells.json").use {
+					it.createNewFile()
+					it.writeText("[]")
+				}
+			}
 		}
 	}
 }
