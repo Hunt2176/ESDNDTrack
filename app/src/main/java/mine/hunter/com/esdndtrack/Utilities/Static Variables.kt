@@ -35,5 +35,24 @@ class StaticItems
 				}
 			}
 		}
+
+		fun MergeSpellLists(): Array<ReadInSpell>
+		{
+			return spellList.toMutableList()
+					.useAndReturn { mutableList ->
+						mutableList.addAll(0, customSpellList.toList())
+						return@useAndReturn mutableList
+					}
+					.toTypedArray()
+		}
+
+		fun RemoveCustomSpell(context: Context, spell: ReadInSpell)
+		{
+			customSpellList.toMutableList().use {
+				it.remove(spell)
+				GSONHelper().writeToDisk(it.toTypedArray(), File(context.filesDir, "customspells.json"))
+			}
+			ReadInCustomSpellList(context)
+		}
 	}
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/MENU_Modify_CSpell"
+        android:enabled="true"
+        android:title="Modify"
+        android:visible="true" />
+    <item
+        android:id="@+id/MENU_Delete_CSpell"
+        android:checkable="false"
+        android:enabled="true"
+        android:title="Delete"
+        android:visible="true" />
+</menu>

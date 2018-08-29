@@ -50,14 +50,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		val dialog = CreateSpellDialog(this) {
 			if (it)
 			{
-				StaticItems.ReadInSpellList(resources)
-				StaticItems.ReadInCustomSpellList(this)
-
-				StaticItems.spellList.toMutableList()
-						.use { mutableList -> mutableList.addAll(0, StaticItems.customSpellList.toList()); StaticItems.spellList = mutableList.toTypedArray() }
-
-
-				(((pager?.adapter as PageAdapter).getItem(2) as SpellsFragment).recycler?.adapter as SpellsArrayAdapter).spellList = StaticItems.spellList
+				(((pager?.adapter as PageAdapter).getItem(2) as SpellsFragment).recycler?.adapter as SpellsArrayAdapter).spellList = StaticItems.MergeSpellLists()
 				((pager?.adapter as PageAdapter).getItem(2) as SpellsFragment).recycler?.adapter?.notifyDataSetChanged()
 			}
 		}
@@ -79,10 +72,6 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 
 		StaticItems.ReadInSpellList(resources)
 		StaticItems.ReadInCustomSpellList(this)
-
-		StaticItems.spellList.toMutableList()
-				.use { it.addAll(0, StaticItems.customSpellList.toList()); StaticItems.spellList = it.toTypedArray() }
-
 
 		pager = findViewById(R.id.TabPager)
 		pager?.adapter = PageAdapter(supportFragmentManager)

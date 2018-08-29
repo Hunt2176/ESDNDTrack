@@ -5,6 +5,8 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
 import mine.hunter.com.esdndtrack.R
 
+
+// Native Kotlin Extensions
 fun <T:Any> T?.ifNotNull(onNotNull:(T) -> Unit)
 {
 	if (this != null)
@@ -48,6 +50,24 @@ fun <T> Array<T>.ifAllTrue(predicate: (T) -> Boolean): Boolean
 	return true
 }
 
+fun <T:Any> T.use(toDo: (T) -> Unit)
+{
+	toDo(this)
+}
+
+fun <T:Any> T.useAndReturn(toDo: (T) -> T): T
+{
+	return toDo(this)
+}
+
+fun <E, T:Any> T.useAndReturnDifferent(toDo: (T) -> E): E
+{
+	return toDo(this)
+}
+
+
+// Android Kotlin Extensions
+
 fun FloatingActionButton.isReadyForComplete(isEnabled: Boolean)
 {
 	if (isEnabled)
@@ -62,7 +82,3 @@ fun FloatingActionButton.isReadyForComplete(isEnabled: Boolean)
 	}
 }
 
-fun <T:Any> T.use(toDo: (T) -> Unit)
-{
-	toDo(this)
-}

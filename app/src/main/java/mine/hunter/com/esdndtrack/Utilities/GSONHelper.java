@@ -18,20 +18,8 @@ import java.util.Arrays;
 public class GSONHelper {
     Gson gson = new Gson();
 
-    public Spell[] readIn(String data) {
-        try {
-            return gson.fromJson(data, Spell[].class);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public Spell singleRead(String data) {
-        return null;
-    }
-
-    public ReadInSpell[] readInSpells(String data) {
-        return gson.fromJson(data, ReadInSpell[].class);
+    public ReadInSpell[] readInSpells(String fileStringData) {
+        return gson.fromJson(fileStringData, ReadInSpell[].class);
     }
 
     public <T> void writeToDisk(T[] toWrite, File fileToWrite) throws IOException {

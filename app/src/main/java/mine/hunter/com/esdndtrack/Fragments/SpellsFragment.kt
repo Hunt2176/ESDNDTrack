@@ -16,17 +16,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.TextView
+import mine.hunter.com.esdndtrack.CreateSpellDialog
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.SpellDetailDialog
 import mine.hunter.com.esdndtrack.Utilities.*
 
-class SpellsFragment: Fragment()
+class SpellsFragment : Fragment()
 {
 
 	var recycler: RecyclerView? = null
-	var theView: View? = null
-
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
 	{
@@ -36,7 +36,7 @@ class SpellsFragment: Fragment()
 		recycler?.layoutManager = GridLayoutManager(newView.context, 1)
 		recycler?.addItemDecoration(DividerItemDecoration(newView.context, DividerItemDecoration.VERTICAL))
 
-		newView.findViewById<EditText>(R.id.SpellSearchText).addTextChangedListener(object: TextWatcher
+		newView.findViewById<EditText>(R.id.SpellSearchText).addTextChangedListener(object : TextWatcher
 		{
 			override fun afterTextChanged(s: Editable?)
 			{
@@ -50,14 +50,11 @@ class SpellsFragment: Fragment()
 
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
 			{
-
 				if (context.isNull() || s.isNull() || recycler.isNull()) return
-				val newSpellList = StaticItems.spellList.filter { it.name.toLowerCase().contains(s!!.toString().toLowerCase()) }
+				val newSpellList = StaticItems.MergeSpellLists().filter { it.name.toLowerCase().contains(s!!.toString().toLowerCase()) }
 				recycler!!.adapter = SpellsArrayAdapter(context!!, newSpellList.toTypedArray())
 			}
 		})
-
-		theView = newView
 		return newView
 
 	}
@@ -66,15 +63,12 @@ class SpellsFragment: Fragment()
 	{
 		fun create(): SpellsFragment
 		{
-			val toReturn = SpellsFragment()
-
-			return toReturn
-
+			return SpellsFragment()
 		}
 	}
 }
 
-class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell> = StaticItems.spellList): RecyclerView.Adapter<SpellViewHolder>()
+class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell> = StaticItems.MergeSpellLists()) : RecyclerView.Adapter<SpellViewHolder>()
 {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpellViewHolder
@@ -92,8 +86,50 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 	{
 		spellList.ifNotNull {
 			holder.spellNameView.text = it[position].name
-			if (it[position].custom) holder.customSpellButton.visibility = View.VISIBLE
-			else holder.customSpellButton.visibility = View.GONE
+			if (it[position].custom)
+			{
+				holder.customSpellButton.visibility = View.VISIBLE
+				holder.customSpellButton.setOnClickListener { _ ->
+					PopupMenu(context, holder.customSpellButton).use { popupMenu ->
+						popupMenu.inflate(R.menu.custom_spell_overflow)
+						popupMenu.setOnMenuItemClickListener { item ->
+							when (item.itemId)
+							{
+								R.id.MENU_Delete_CSpell ->
+								{
+									StaticItems.RemoveCustomSpell(context, it[position])
+									spellList = StaticItems.MergeSpellLists()
+									notifyDataSetChanged()
+
+								}
+								R.id.MENU_Modify_CSpell ->
+								{
+									CreateSpellDialog.editCustomSpell(context, it[position]) {
+										if (it)
+										{
+											spellList = StaticItems.MergeSpellLists()
+											notifyDataSetChanged()
+										}
+									}
+											.use { dialog ->
+												dialog.show()
+												dialog.window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+											}
+								}
+
+								else ->
+								{
+								}
+							}
+							true
+						}
+						popupMenu.show()
+					}
+				}
+			} else
+			{
+				holder.customSpellButton.visibility = View.GONE
+			}
 			holder.itemView.setOnTouchListener { v, event ->
 				when (event.action)
 				{
@@ -126,7 +162,7 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 	}
 }
 
-class SpellViewHolder(view: View): RecyclerView.ViewHolder(view)
+class SpellViewHolder(view: View) : RecyclerView.ViewHolder(view)
 {
 	val spellNameView: TextView = view.findViewById(R.id.SpellName)
 	val customSpellButton: ImageButton = view.findViewById(R.id.customSpell_button)
