@@ -9,10 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import kotlinx.android.synthetic.main.dice_recycler.*
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.ArraySlider
@@ -20,7 +17,7 @@ import mine.hunter.com.esdndtrack.Utilities.Dice
 import mine.hunter.com.esdndtrack.Utilities.StandardDice
 import mine.hunter.com.esdndtrack.Utilities.toIntOrZero
 
-class DiceFragment: Fragment()
+class DiceFragment : Fragment()
 {
 	lateinit var recycler: RecyclerView
 
@@ -38,22 +35,21 @@ class DiceFragment: Fragment()
 		}
 
 		newView.findViewById<Button>(R.id.AddDice).setOnClickListener {
-			(recycler.adapter  as DiceArrayAdapter).createDiceCell()
+			(recycler.adapter as DiceArrayAdapter).createDiceCell()
 			NoDiceInfo.visibility = View.INVISIBLE
 		}
 
 		newView.findViewById<Button>(R.id.RollAllDice).setOnClickListener {
-			for (i in (recycler.adapter as DiceArrayAdapter).diceCells)
-			{
-				i.RollDice()
-			}
+			var total = 0
+			(recycler.adapter as DiceArrayAdapter).diceCells.forEach { diceCell -> total += diceCell.RollDice() }
+			Toast.makeText(context, "Total ${total}", Toast.LENGTH_SHORT).show()
 		}
 
 		return newView
 	}
 }
 
-class DiceArrayAdapter(val context: Context): RecyclerView.Adapter<DiceViewHolder>()
+class DiceArrayAdapter(val context: Context) : RecyclerView.Adapter<DiceViewHolder>()
 {
 	var count = 0
 	val diceCells = ArrayList<DiceViewHolder>()
@@ -85,25 +81,33 @@ class DiceArrayAdapter(val context: Context): RecyclerView.Adapter<DiceViewHolde
 	override fun onBindViewHolder(holder: DiceViewHolder, position: Int)
 	{
 		diceCells.add(holder)
-		holder.result.text = "="
+		holder.reset()
 	}
 }
 
-class DiceViewHolder(view: View): RecyclerView.ViewHolder(view)
+class DiceViewHolder(view: View) : RecyclerView.ViewHolder(view)
 {
-	val slider = ArraySlider(StandardDice.availableSides)
 	val dieSides: EditText = view.findViewById(R.id.DiceSides)
 	val addToSides: EditText = view.findViewById(R.id.AddToRoll)
 	val result: TextView = view.findViewById(R.id.DiceResult)
+	val slider = ArraySlider(StandardDice.availableSides)
 
 	init
 	{
+		reset()
+	}
+
+	fun reset()
+	{
+		slider.reset()
 		dieSides.setText("${slider.getCurrentItem()}")
-		view.findViewById<ImageButton>(R.id.SwitchDiceDown).setOnClickListener {
+		addToSides.setText("")
+		result.text = "="
+		itemView.findViewById<ImageButton>(R.id.SwitchDiceDown).setOnClickListener {
 			dieSides.setText("${slider.moveLeft()}")
 		}
 
-		view.findViewById<ImageButton>(R.id.SwitchDiceUp).setOnClickListener {
+		itemView.findViewById<ImageButton>(R.id.SwitchDiceUp).setOnClickListener {
 			dieSides.setText("${slider.moveRight()}")
 		}
 	}

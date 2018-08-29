@@ -3,6 +3,11 @@ package mine.hunter.com.esdndtrack.Utilities
 class ArraySlider<T>(val arrayToSlide: Array<T>) {
     private var cursor = 0
 
+    fun reset()
+    {
+	    cursor = 0
+    }
+
     fun hasLeft(): Boolean
     {
         return cursor > 0

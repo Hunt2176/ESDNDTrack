@@ -117,9 +117,7 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 											}
 								}
 
-								else ->
-								{
-								}
+								else -> {}
 							}
 							true
 						}
