@@ -1,18 +1,12 @@
 package mine.hunter.com.esdndtrack
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -24,7 +18,7 @@ import mine.hunter.com.esdndtrack.Utilities.ifNotNull
 
 class CharacterManager: AppCompatActivity()
 {
-	private var recycler: RecyclerView? = null
+	private var recycler: androidx.recyclerview.widget.RecyclerView? = null
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
@@ -41,14 +35,14 @@ class CharacterManager: AppCompatActivity()
 
 		recycler = findViewById(R.id.CharacterManageRecycler)
 		recycler?.adapter = CharacterManageAdapter(this)
-		recycler?.layoutManager = GridLayoutManager(this, 1)
-		recycler?.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+		recycler?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 1)
+		recycler?.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(this, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
 
 		AddCharacterButton.setOnClickListener {
 //			startActivity(Intent(this, CharacterCreater::class.java))
 			val charCreateDialog = CharacterCreater(this, {addedchar -> if (addedchar) {onResume()}})
 			charCreateDialog.show()
-			charCreateDialog?.window.setLayout((6 * resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+			charCreateDialog.window.setLayout((6 * resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 		}
 	}
 
@@ -66,7 +60,7 @@ class CharacterManager: AppCompatActivity()
 	}
 }
 
-class CharacterManageAdapter(val context: Context): RecyclerView.Adapter<CharacterViewHolder>()
+class CharacterManageAdapter(val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<CharacterViewHolder>()
 {
 	private var names = arrayListOf<String>()
 
@@ -127,7 +121,7 @@ class CharacterManageAdapter(val context: Context): RecyclerView.Adapter<Charact
 	}
 }
 
-class CharacterViewHolder(view: View): RecyclerView.ViewHolder(view)
+class CharacterViewHolder(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 {
 	val nameView: TextView
 	val overflowButton: ImageButton

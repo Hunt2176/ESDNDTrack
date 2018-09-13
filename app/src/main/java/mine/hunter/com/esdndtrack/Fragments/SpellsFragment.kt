@@ -2,11 +2,11 @@ package mine.hunter.com.esdndtrack.Fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
@@ -23,18 +23,18 @@ import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.SpellDetailDialog
 import mine.hunter.com.esdndtrack.Utilities.*
 
-class SpellsFragment : Fragment()
+class SpellsFragment : androidx.fragment.app.Fragment()
 {
 
-	var recycler: RecyclerView? = null
+	var recycler: androidx.recyclerview.widget.RecyclerView? = null
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
 	{
 		val newView = inflater.inflate(R.layout.fragment_spells, container, false)
 		recycler = newView.findViewById(R.id.SpellsRecycle)
 		recycler?.adapter = SpellsArrayAdapter(newView.context)
-		recycler?.layoutManager = GridLayoutManager(newView.context, 1)
-		recycler?.addItemDecoration(DividerItemDecoration(newView.context, DividerItemDecoration.VERTICAL))
+		recycler?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(newView.context, 1)
+		recycler?.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(newView.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
 
 		newView.findViewById<EditText>(R.id.SpellSearchText).addTextChangedListener(object : TextWatcher
 		{
@@ -68,7 +68,7 @@ class SpellsFragment : Fragment()
 	}
 }
 
-class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell> = StaticItems.MergeSpellLists()) : RecyclerView.Adapter<SpellViewHolder>()
+class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell> = StaticItems.MergeSpellLists()) : androidx.recyclerview.widget.RecyclerView.Adapter<SpellViewHolder>()
 {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpellViewHolder
@@ -160,7 +160,7 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 	}
 }
 
-class SpellViewHolder(view: View) : RecyclerView.ViewHolder(view)
+class SpellViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 {
 	val spellNameView: TextView = view.findViewById(R.id.SpellName)
 	val customSpellButton: ImageButton = view.findViewById(R.id.customSpell_button)

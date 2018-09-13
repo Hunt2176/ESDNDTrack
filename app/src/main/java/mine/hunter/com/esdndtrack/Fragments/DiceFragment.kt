@@ -2,10 +2,6 @@ package mine.hunter.com.esdndtrack.Fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,17 +13,17 @@ import mine.hunter.com.esdndtrack.Utilities.Dice
 import mine.hunter.com.esdndtrack.Utilities.StandardDice
 import mine.hunter.com.esdndtrack.Utilities.toIntOrZero
 
-class DiceFragment : Fragment()
+class DiceFragment : androidx.fragment.app.Fragment()
 {
-	lateinit var recycler: RecyclerView
+	lateinit var recycler: androidx.recyclerview.widget.RecyclerView
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
 	{
 		val newView = inflater.inflate(R.layout.dice_recycler, container, false)
 		recycler = newView.findViewById(R.id.DiceRecycler)
 		recycler.adapter = DiceArrayAdapter(newView.context)
-		recycler.layoutManager = GridLayoutManager(newView.context, 1)
-		recycler.addItemDecoration((DividerItemDecoration(newView.context, DividerItemDecoration.VERTICAL)))
+		recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(newView.context, 1)
+		recycler.addItemDecoration((androidx.recyclerview.widget.DividerItemDecoration(newView.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL)))
 
 		newView.findViewById<Button>(R.id.ResetDiceButton).setOnClickListener {
 			(recycler.adapter as DiceArrayAdapter).resetDice()
@@ -49,7 +45,7 @@ class DiceFragment : Fragment()
 	}
 }
 
-class DiceArrayAdapter(val context: Context) : RecyclerView.Adapter<DiceViewHolder>()
+class DiceArrayAdapter(val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<DiceViewHolder>()
 {
 	var count = 0
 	val diceCells = ArrayList<DiceViewHolder>()
@@ -85,7 +81,7 @@ class DiceArrayAdapter(val context: Context) : RecyclerView.Adapter<DiceViewHold
 	}
 }
 
-class DiceViewHolder(view: View) : RecyclerView.ViewHolder(view)
+class DiceViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 {
 	val dieSides: EditText = view.findViewById(R.id.DiceSides)
 	val addToSides: EditText = view.findViewById(R.id.AddToRoll)

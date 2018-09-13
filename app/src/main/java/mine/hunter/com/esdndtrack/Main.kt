@@ -3,32 +3,25 @@ package mine.hunter.com.esdndtrack
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
-import mine.hunter.com.esdndtrack.Fragments.CharactersFragment
-import mine.hunter.com.esdndtrack.Fragments.DiceFragment
-import mine.hunter.com.esdndtrack.Fragments.SpellsArrayAdapter
-import mine.hunter.com.esdndtrack.Fragments.SpellsFragment
+import mine.hunter.com.esdndtrack.Fragments.*
 import mine.hunter.com.esdndtrack.Utilities.*
 
 class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListener
 {
 	private var fab: FloatingActionButton? = null
 	private var currentTab = 0
-	private var pager: ViewPager? = null
+	private var pager: androidx.viewpager.widget.ViewPager? = null
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean
 	{
@@ -63,12 +56,12 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 	{
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.main_activity)
-		setSupportActionBar(toolbar)
+		setSupportActionBar(findViewById(R.id.toolbar))
 
 		supportActionBar?.title = "ES DND"
 
 		window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
-		fab = MainFAB
+		fab = findViewById(R.id.MainFAB)
 
 		StaticItems.ReadInSpellList(resources)
 		StaticItems.ReadInCustomSpellList(this)
@@ -77,7 +70,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		pager?.adapter = PageAdapter(supportFragmentManager)
 		pager?.offscreenPageLimit = 3
 
-		pager?.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+		pager?.addOnPageChangeListener(object: androidx.viewpager.widget.ViewPager.OnPageChangeListener {
 			override fun onPageScrollStateChanged(state: Int)
 			{
 
@@ -95,9 +88,10 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 			override fun onPageSelected(position: Int)
 			{
 				when (position){
-					0 -> MainFAB.show()
-					1 -> MainFAB.hide()
-					2 -> MainFAB.hide()
+					0 -> fab?.show()
+					1 -> fab?.hide()
+					2 -> fab?.hide()
+					3 -> fab?.show()
 				}
 				currentTab = position
 				this@Main.invalidateOptionsMenu()
@@ -160,6 +154,13 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 						fab?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.add_icon))
 					}
 				}
+
+				3 ->
+				{
+					NoteMaker.show(this){ isReady, pair ->
+						if (isReady) ((pager?.adapter as PageAdapter).getItem(3) as NotesFragment).addNoteToView(pair!!)
+					}
+				}
 			}
 		}
 
@@ -171,9 +172,9 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 	}
 }
 
-class PageAdapter(private val fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager)
+class PageAdapter(private val fragmentManager: androidx.fragment.app.FragmentManager): androidx.fragment.app.FragmentPagerAdapter(fragmentManager)
 {
-	override fun getItem(position: Int): Fragment
+	override fun getItem(position: Int): androidx.fragment.app.Fragment
 	{
 		if (fragmentManager.fragments.size != 0 && position <= fragmentManager.fragments.size)
 		{
@@ -184,6 +185,8 @@ class PageAdapter(private val fragmentManager: FragmentManager): FragmentPagerAd
 			0 -> CharactersFragment()
 			1 -> DiceFragment()
 			2 -> SpellsFragment.create()
+			3 -> NotesFragment()
+
 			else ->
 			{
 				CharactersFragment()
@@ -191,5 +194,5 @@ class PageAdapter(private val fragmentManager: FragmentManager): FragmentPagerAd
 		}
 	}
 
-	override fun getCount(): Int = 3
+	override fun getCount(): Int = 4
 }

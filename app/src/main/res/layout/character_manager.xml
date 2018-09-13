@@ -1,59 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/ManagerToolbar"
-        android:layout_width="0dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/AddCharacterButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:elevation="8dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:clickable="true"
+        app:layout_anchor="@+id/ManageCharacterToolbar"
+        app:layout_anchorGravity="center"
+        app:srcCompat="@drawable/add_person" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/CharacterManageRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="true"
+        app:layout_anchorGravity="fill"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layoutManager="GridLayoutManager"
+        tools:layout_editor_absoluteY="56dp"
+        tools:listitem="@layout/recycler_view_item"
+        tools:spanCount="5" />
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/ManageCharacterToolbar"
+        style="@style/Widget.MaterialComponents.BottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/colorPrimary"
+        app:fabCradleVerticalOffset="0dp"
+        app:layout_anchor="@+id/CharacterManageRecycler"
+        app:layout_anchorGravity="bottom|center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/CharacterManageRecycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:clipToPadding="true"
-        app:layout_constraintBottom_toTopOf="@+id/ManagerToolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ManageCharacterToolbar" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/AddCharacterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="33dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:clickable="true"
-        app:elevation="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ManagerToolbar"
-        app:layout_constraintEnd_toEndOf="@+id/ManagerToolbar"
-        app:layout_constraintHorizontal_bias="0.977"
-        app:layout_constraintStart_toStartOf="@+id/ManagerToolbar"
-        app:srcCompat="@drawable/add_person" />
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/ManageCharacterToolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        android:backgroundTint="@color/colorPrimary"
-        app:title="Manage Characters"
-        app:titleTextColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

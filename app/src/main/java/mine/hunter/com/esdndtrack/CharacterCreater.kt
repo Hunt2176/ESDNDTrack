@@ -2,10 +2,8 @@ package mine.hunter.com.esdndtrack
 
 import android.app.Dialog
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.content.ContextCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.CheckBox

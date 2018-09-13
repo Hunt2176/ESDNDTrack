@@ -3,7 +3,7 @@ package mine.hunter.com.esdndtrack
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
@@ -98,7 +98,7 @@ class CreateSpellDialog(context: Context, val onDismiss: (Boolean) -> Unit): Dia
 	}
 }
 
-private class SpellCTextWatcher: TextWatcher
+class SpellCTextWatcher: TextWatcher
 {
 	var onTextIsNotEmpty: ((Boolean) -> Unit)? = null
 

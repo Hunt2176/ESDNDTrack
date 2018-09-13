@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import mine.hunter.com.esdndtrack.R
 
-class ArrayAdapter(val context: Context) : RecyclerView.Adapter<CharacterViewRecycle>()
+class ArrayAdapter(val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<CharacterViewRecycle>()
 {
 	var characters = arrayListOf<String>()
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewRecycle
@@ -35,7 +35,7 @@ class ArrayAdapter(val context: Context) : RecyclerView.Adapter<CharacterViewRec
 	}
 }
 
-class CharacterViewRecycle(view: View, val context: Context) : RecyclerView.ViewHolder(view)
+class CharacterViewRecycle(view: View, val context: Context) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 {
 	val characterName = view.findViewById<TextView>(R.id.CharacterName)
 	val healthBar: ProgressBar

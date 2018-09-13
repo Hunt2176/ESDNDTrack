@@ -1,8 +1,8 @@
 package mine.hunter.com.esdndtrack.Utilities
 
 import android.content.res.ColorStateList
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.content.ContextCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.content.ContextCompat
 import mine.hunter.com.esdndtrack.R
 
 
@@ -65,6 +65,17 @@ fun <E, T:Any> T.useAndReturnDifferent(toDo: (T) -> E): E
 	return toDo(this)
 }
 
+inline fun <reified T> Pair<T,T>.toArray(): Array<T>
+{
+	return arrayOf(this.first, this.second)
+}
+
+fun List<String>.createString(): String
+{
+	var toReturn = ""
+	this.forEach { toReturn += it }
+	return toReturn
+}
 
 // Android Kotlin Extensions
 

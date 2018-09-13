@@ -7,6 +7,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStreamReader
+import java.util.*
 
 class StaticItems
 {
@@ -54,5 +55,30 @@ class StaticItems
 			}
 			ReadInCustomSpellList(context)
 		}
+
+		fun getNotePair(index: Int, context: Context): Pair<String, String>?
+		{
+			val file = File(context.filesDir, "notes.json")
+			if (file.exists())
+			{
+				val lines = GSONHelper().readInArray(KotlinFile.fromFile(file))
+				if (lines != null && index < lines.count())
+				{
+					return Pair(lines[index][0], lines[index][1])
+
+				}
+				return null
+
+			}
+			file.createNewFile()
+			file.writeText("[]")
+			return null
+		}
+
+		fun writeNotePairs(context: Context, notePairs: Array<Pair<String, String>>)
+		{
+			GSONHelper().writeToDisk(notePairs.map { it.toArray() }.toTypedArray(), File(context.filesDir, "notes.json"))
+		}
+
 	}
 }

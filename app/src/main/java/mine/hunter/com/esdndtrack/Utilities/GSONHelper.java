@@ -15,7 +15,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class GSONHelper {
+    @NonNull
     Gson gson = new Gson();
 
     public ReadInSpell[] readInSpells(String fileStringData) {
@@ -29,7 +33,7 @@ public class GSONHelper {
         writer.close();
     }
 
-    public void addCustomSpell(Context context, ReadInSpell spell) {
+    public void addCustomSpell(@NonNull Context context, ReadInSpell spell) {
         try
         {
             InputStream inputStream = new FileInputStream(new File(context.getFilesDir(), "customspells.json"));
@@ -51,7 +55,28 @@ public class GSONHelper {
         {
 
         }
+    }
 
+    @Nullable
+    public String[][] readInArray(@NonNull KotlinFile fileToRead)
+    {
+        if (fileToRead.exists())
+        {
+            return gson.fromJson(fileToRead.readToString(), String[][].class);
+        }
+        return null;
+    }
 
+    @Nullable
+    public String[] readInArray(String jsonString)
+    {
+        try
+        {
+            return gson.fromJson(jsonString, String[].class);
+
+        } catch (Exception err)
+        {
+            return null;
+        }
     }
 }
