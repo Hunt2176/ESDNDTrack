@@ -23,35 +23,6 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 	private var currentTab = 0
 	private var pager: androidx.viewpager.widget.ViewPager? = null
 
-	override fun onCreateOptionsMenu(menu: Menu?): Boolean
-	{
-
-		when (pager?.currentItem)
-		{
-			2 ->
-			{
-				menuInflater.inflate(R.menu.spellbook_overflow, menu)
-				return true
-			}
-
-		}
-		return false
-	}
-
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean
-	{
-		val dialog = CreateSpellDialog(this) {
-			if (it)
-			{
-				(((pager?.adapter as PageAdapter).getItem(2) as SpellsFragment).recycler?.adapter as SpellsArrayAdapter).spellList = StaticItems.MergeSpellLists()
-				((pager?.adapter as PageAdapter).getItem(2) as SpellsFragment).recycler?.adapter?.notifyDataSetChanged()
-			}
-		}
-		dialog.show()
-		dialog.window?.setLayout((6 * resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
-		return true
-	}
-
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
@@ -94,7 +65,6 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 					3 -> fab?.show()
 				}
 				currentTab = position
-				this@Main.invalidateOptionsMenu()
 			}
 		})
 
@@ -116,11 +86,12 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		})
 
 		fab?.setOnClickListener {
-			fab?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.cancel))
+
 			when (currentTab)
 			{
 				0 ->
 				{
+					fab!!.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.cancel))
 					val menu = PopupMenu(this, it)
 					menu.inflate(R.menu.create_character_fab_menu)
 					menu.show()
@@ -151,7 +122,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 					}
 
 					menu.setOnDismissListener { _ ->
-						fab?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.add_icon))
+						fab!!.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.add_icon))
 					}
 				}
 

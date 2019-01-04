@@ -28,23 +28,13 @@ public class GSONHelper {
 
     public <T> void writeToDisk(T[] toWrite, File fileToWrite) throws IOException {
         String jsonData = gson.toJson(toWrite);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileToWrite));
-        writer.write(jsonData);
-        writer.close();
+        KotlinFile.Companion.fromFile(fileToWrite).writeString(jsonData, false);
     }
 
     public void addCustomSpell(@NonNull Context context, ReadInSpell spell) {
         try
         {
-            InputStream inputStream = new FileInputStream(new File(context.getFilesDir(), "customspells.json"));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String totalInput = "";
-            String line;
-
-            while ((line = reader.readLine()) != null)
-            {
-                totalInput += line;
-            }
+            String totalInput = new KotlinFile(context.getFilesDir(), "customspells.json").readToString();
             ReadInSpell[] readIn = readInSpells(totalInput);
             ArrayList<ReadInSpell> list = new ArrayList<>(Arrays.asList(readIn));
             list.add(spell);
@@ -63,12 +53,13 @@ public class GSONHelper {
         if (fileToRead.exists())
         {
             return gson.fromJson(fileToRead.readToString(), String[][].class);
+
         }
         return null;
     }
 
     @Nullable
-    public String[] readInArray(String jsonString)
+    public String[] readInArray(@NonNull String jsonString)
     {
         try
         {

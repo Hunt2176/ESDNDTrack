@@ -1,6 +1,7 @@
 package mine.hunter.com.esdndtrack.Fragments
 
 import android.content.Context
+import android.os.AsyncTask
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -19,6 +20,7 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
 import mine.hunter.com.esdndtrack.CreateSpellDialog
+import mine.hunter.com.esdndtrack.PageAdapter
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.SpellDetailDialog
 import mine.hunter.com.esdndtrack.Utilities.*
@@ -35,6 +37,18 @@ class SpellsFragment : androidx.fragment.app.Fragment()
 		recycler?.adapter = SpellsArrayAdapter(newView.context)
 		recycler?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(newView.context, 1)
 		recycler?.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(newView.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
+
+		newView.findViewById<ImageButton>(R.id.CreateSpellButton).setOnClickListener {
+			val dialog = CreateSpellDialog(newView.context) {
+				if (it)
+				{
+					(recycler?.adapter as SpellsArrayAdapter).spellList = StaticItems.MergeSpellLists()
+					(recycler?.adapter?.notifyDataSetChanged())
+				}
+			}
+			dialog.show()
+			dialog.window?.setLayout((6 * resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+		}
 
 		newView.findViewById<EditText>(R.id.SpellSearchText).addTextChangedListener(object : TextWatcher
 		{
@@ -82,6 +96,10 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 		return if (spellList.isNull()) 0 else spellList.size
 	}
 
+	//Holds if the user begins holding on a cell
+	var holding = false
+	//The Dialog that the holding pops up if the user is still holding
+	var holdingView: SpellDetailDialog? = null
 	override fun onBindViewHolder(holder: SpellViewHolder, position: Int)
 	{
 		spellList.ifNotNull {
@@ -134,23 +152,35 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 					MotionEvent.ACTION_DOWN ->
 					{
 						v.setBackgroundColor(v.context.getColor(R.color.colorAccent))
+						holding = true
+						AndroidTimer(500) {
+							if (holding)
+							{
+								holdingView = SpellDetailDialog(v.context, it[position])
+								holdingView?.show()
+							}
+						}.execute()
 					}
 					MotionEvent.ACTION_CANCEL ->
 					{
 						v.setBackgroundColor(v.context.getColor(android.R.color.white))
+						holding = false
 					}
 					MotionEvent.ACTION_UP ->
 					{
 						v.setBackgroundColor(v.context.getColor(android.R.color.white))
-						val dialog = SpellDetailDialog(v.context, it[position])
-						dialog.show()
-						dialog.spellNameView.text = it[position].name
-						dialog.spellDescView.text = Html.fromHtml("<br>${it[position].desc}", Html.FROM_HTML_MODE_LEGACY)
-						dialog.spellLevelView.text = Html.fromHtml("<b>Level</b><br>${it[position].level}", Html.FROM_HTML_MODE_LEGACY)
-						dialog.spellRangeView.text = Html.fromHtml("<b>Range</b><br>${it[position].range}", Html.FROM_HTML_MODE_LEGACY)
-						dialog.window?.setLayout((6 * v.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
-
-
+						if (holding && holdingView != null && holdingView!!.isShowing)
+						{
+							holdingView?.dismiss()
+							holding = false
+						}
+						else
+						{
+							holding = false
+							val dialog = SpellDetailDialog(v.context, it[position])
+							dialog.show()
+							dialog.window?.setLayout((6 * v.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+						}
 					}
 				}
 				true

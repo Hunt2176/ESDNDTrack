@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -84,7 +84,21 @@ class NotesArrayAdapter(val context: Context, var notePairs: ArrayList<Pair<Stri
 	{
 		notePairs.get(position).use {
 			cell.title.setText(it.first)
-			cell.body.setText(it.second)
+			it.second.split("\n").forEachIndexed { index, split ->
+				if (index == 0)
+				{
+					cell.body.text = "$split"
+				}
+				else
+				{
+					cell.body.text = "${cell.body.text}\n$split"
+				}
+			}
+		}
+		cell.onItemDeleted = {
+			notePairs.remove(notePairs[position])
+			notifyItemRemoved(position)
+			StaticItems.writeNotePairs(context, notePairs.toTypedArray())
 		}
 	}
 }
@@ -93,11 +107,14 @@ class NoteViewCell(view: View): RecyclerView.ViewHolder(view)
 {
 	val title: TextView
 	val body: TextView
+	val overFlowButton: ImageButton
 	var bodyVisible = false
+	var onItemDeleted: (() -> Unit)? = null
 	init
 	{
 		title = view.findViewById(R.id.NoteTitle)
 		body = view.findViewById(R.id.NoteBody)
+		overFlowButton = view.findViewById(R.id.NoteOverflow)
 
 		view.findViewById<ImageButton>(R.id.NoteVisibleChangeButton)
 				.use { button ->
@@ -117,6 +134,22 @@ class NoteViewCell(view: View): RecyclerView.ViewHolder(view)
 					button.setBackgroundResource(R.drawable.arrow_expand)
 				}
 
+		overFlowButton.setOnClickListener { usingView ->
+			PopupMenu(usingView.context, usingView).use { menu ->
+				menu.inflate(R.menu.custom_spell_overflow)
+				menu.show()
+				menu.setOnMenuItemClickListener { menuItem ->
+					when (menuItem.itemId)
+					{
+						R.id.MENU_Delete_CSpell -> {
+							onItemDeleted?.invoke()
+						}
+						else -> {}
+					}
+					return@setOnMenuItemClickListener true
+				}
+			}
+		}
 	}
 }
 
