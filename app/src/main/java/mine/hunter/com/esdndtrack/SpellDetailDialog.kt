@@ -7,12 +7,19 @@ import android.text.Html
 import android.widget.TextView
 import mine.hunter.com.esdndtrack.Utilities.ReadInSpell
 
-class SpellDetailDialog(context: Context, val spell: ReadInSpell): Dialog(context)
+class SpellDetailDialog(context: Context, val spell: ReadInSpell, private val onDismiss: (() -> Unit)? = null): Dialog(context)
 {
 	lateinit var spellNameView: TextView
 	lateinit var spellDescView: TextView
 	lateinit var spellLevelView: TextView
 	lateinit var spellRangeView: TextView
+
+	init
+	{
+		this.setOnDismissListener {
+			onDismiss?.invoke()
+		}
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{

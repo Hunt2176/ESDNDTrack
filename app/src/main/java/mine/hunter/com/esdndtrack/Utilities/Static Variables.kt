@@ -12,8 +12,9 @@ class StaticItems
 {
 	companion object
 	{
-		var spellList = arrayOf<ReadInSpell>()
-		var customSpellList = arrayOf<ReadInSpell>()
+		private var spellList = arrayOf<ReadInSpell>()
+		private var customSpellList = arrayOf<ReadInSpell>()
+		private var listenTriggers = mutableMapOf<String, TriggerListener>()
 
 		fun ReadInSpellList(resources: Resources)
 		{
@@ -78,5 +79,28 @@ class StaticItems
 			GSONHelper().writeToDisk(notePairs.map { it.toArray() }.toTypedArray(), File(context.filesDir, "notes.json"))
 		}
 
+		fun storeTrigger(trigger: TriggerListener)
+		{
+			listenTriggers[trigger.id] = trigger
+		}
+
+		fun removeTrigger(id: String)
+		{
+			listenTriggers.remove(id)
+		}
+
+		fun executeTrigger(id: String)
+		{
+			listenTriggers[id]?.execute()
+		}
+
+	}
+}
+
+class TriggerListener(val id: String, private val trigger: () -> Unit)
+{
+	fun execute()
+	{
+		trigger.invoke()
 	}
 }

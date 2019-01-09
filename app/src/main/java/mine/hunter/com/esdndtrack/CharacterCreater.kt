@@ -9,7 +9,6 @@ import android.text.TextWatcher
 import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
-import mine.hunter.com.esdndtrack.Utilities.SavableItem
 import mine.hunter.com.esdndtrack.Utilities.isReadyForComplete
 import mine.hunter.com.esdndtrack.Utilities.toIntOrZero
 
@@ -87,7 +86,6 @@ class CharacterCreater(context: Context, val onDismiss: (Boolean)->Unit) : Dialo
                 val editor = prefs.edit()
 
                 editor.putInt(SavableItem.max_hp.getStringKey(), healthInput.text.toIntOrZero())
-                editor.putInt(SavableItem.max_magic.getStringKey(), magicPointInput.text.toIntOrZero())
                 editor.putInt(SavableItem.magicModifier.getStringKey(), spellModifierInput.text.toIntOrZero())
                 editor.putInt(SavableItem.character_ac.getStringKey(), acInput.text.toIntOrZero())
                 editor.putBoolean(SavableItem.uses_magic.getStringKey(), useManaTickBox.isChecked)

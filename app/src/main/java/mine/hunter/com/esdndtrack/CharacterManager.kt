@@ -13,7 +13,6 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
 import kotlinx.android.synthetic.main.character_manager.*
-import mine.hunter.com.esdndtrack.Utilities.SavableItem
 import mine.hunter.com.esdndtrack.Utilities.ifNotNull
 
 class CharacterManager: AppCompatActivity()

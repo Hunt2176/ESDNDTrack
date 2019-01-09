@@ -1,15 +1,8 @@
 package mine.hunter.com.esdndtrack.Fragments
 
 import android.content.Context
-import android.os.AsyncTask
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
-import android.text.Html
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -19,8 +12,8 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import mine.hunter.com.esdndtrack.CreateSpellDialog
-import mine.hunter.com.esdndtrack.PageAdapter
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.SpellDetailDialog
 import mine.hunter.com.esdndtrack.Utilities.*
@@ -97,9 +90,9 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 	}
 
 	//Holds if the user begins holding on a cell
-	var holding = false
+	private var holding = false
 	//The Dialog that the holding pops up if the user is still holding
-	var holdingView: SpellDetailDialog? = null
+	private var holdingView: SpellDetailDialog? = null
 	override fun onBindViewHolder(holder: SpellViewHolder, position: Int)
 	{
 		spellList.ifNotNull {
@@ -156,7 +149,8 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 						AndroidTimer(500) {
 							if (holding)
 							{
-								holdingView = SpellDetailDialog(v.context, it[position])
+								StaticItems.executeTrigger("disablepager")
+								holdingView = SpellDetailDialog(v.context, it[position]){StaticItems.executeTrigger("enablepager")}
 								holdingView?.show()
 							}
 						}.execute()

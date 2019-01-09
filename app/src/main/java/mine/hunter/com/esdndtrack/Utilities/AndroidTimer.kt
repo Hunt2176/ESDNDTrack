@@ -1,8 +1,6 @@
 package mine.hunter.com.esdndtrack.Utilities
 
 import android.os.AsyncTask
-import java.util.*
-import kotlin.concurrent.timerTask
 
 class AndroidTimer(private val delay: Long, private val onComplete: () -> Unit)
 {

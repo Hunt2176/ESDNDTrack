@@ -81,7 +81,7 @@
 //        }
 //
 //        override fun onBindViewHolder(holder: CharacterViewRecycle, position: Int) {
-//            holder.ReadFromStorage(characters[position])
+//            holder.readFromStorage(characters[position])
 //        }
 //    }
 //
@@ -107,58 +107,58 @@
 //            magicText.text = "Magic: ${magicBar.progress}/${magicBar.max}"
 //
 //            healthAdd.setOnClickListener {
-//                ChangeProgressBar(healthBar, 1)
+//                changeProgressBar(healthBar, 1)
 //                healthText.text = "Health: ${healthBar.progress}/${healthBar.max}"
 //                SaveToStorage(SavableItem.current_hp, healthBar.progress)
 //            }
 //            healthSubtract.setOnClickListener {
-//                ChangeProgressBar(healthBar, -1)
+//                changeProgressBar(healthBar, -1)
 //                healthText.text = "Health: ${healthBar.progress}/${healthBar.max}"
 //                SaveToStorage(SavableItem.current_hp, healthBar.progress)
 //            }
 //            magicAdd.setOnClickListener {
-//                ChangeProgressBar(magicBar, 1)
+//                changeProgressBar(magicBar, 1)
 //                magicText.text = "Magic: ${magicBar.progress}/${magicBar.max}"
 //                SaveToStorage(SavableItem.current_magic, magicBar.progress)
 //            }
 //            magicSubtract.setOnClickListener {
-//                ChangeProgressBar(magicBar, -1)
+//                changeProgressBar(magicBar, -1)
 //                magicText.text = "Magic: ${magicBar.progress}/${magicBar.max}"
 //                SaveToStorage(SavableItem.current_magic, magicBar.progress)
 //            }
 //
 //            healthText.setOnLongClickListener {
 //                var SetLevelDialog = SetLevelDialog(context, healthBar) { bar ->
-//                    CopyBarDetails(healthBar, bar, "Health", healthText)
+//                    copyBarDetails(healthBar, bar, "Health", healthText)
 //                    SaveToStorage(SavableItem.max_hp, healthBar.max)
 //                    SaveToStorage(SavableItem.current_hp, healthBar.progress)
 //                }
 //                SetLevelDialog.show()
-//                SetLevelDialog.SetLevelTitle("Set Max Health $name")
+//                SetLevelDialog.setLevelTitle("Set Max Health $name")
 //                SetLevelDialog.window.setLayout((6 * view.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 //                true
 //            }
 //
 //            magicText.setOnLongClickListener {
 //                val SetLevelDialog = SetLevelDialog(context, magicBar) { bar ->
-//                    CopyBarDetails(magicBar, bar, "Magic", magicText)
+//                    copyBarDetails(magicBar, bar, "Magic", magicText)
 //                    SaveToStorage(SavableItem.max_magic, magicBar.max)
 //                    SaveToStorage(SavableItem.current_magic, magicBar.progress)
 //                }
 //                SetLevelDialog.show()
-//                SetLevelDialog.SetLevelTitle("Set Max Magic for $name")
+//                SetLevelDialog.setLevelTitle("Set Max Magic for $name")
 //                SetLevelDialog.window.setLayout((6 * view.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 //                true
 //            }
 //        }
 //
-//        fun CopyBarDetails(barToUpdate: ProgressBar, barToUpdateFrom: ProgressBar, barName: String, textView: TextView) {
+//        fun copyBarDetails(barToUpdate: ProgressBar, barToUpdateFrom: ProgressBar, barName: String, textView: TextView) {
 //            barToUpdate.max = barToUpdateFrom.max
 //            barToUpdate.progress = barToUpdateFrom.max
 //            textView.text = "${barName}: ${barToUpdateFrom.max}/${barToUpdateFrom.max}"
 //        }
 //
-//        fun ChangeProgressBar(progressBar: ProgressBar, amount: Int) {
+//        fun changeProgressBar(progressBar: ProgressBar, amount: Int) {
 //            if (!(progressBar.progress + amount > progressBar.max || progressBar.progress + amount < 0)) {
 //                progressBar.progress += amount
 //            }
@@ -176,7 +176,7 @@
 //            editor.apply()
 //        }
 //
-//        fun ReadFromStorage(name: String) {
+//        fun readFromStorage(name: String) {
 //            this.name = name
 //            characterName.text = name
 //            val preferences = context.getSharedPreferences(name, Context.MODE_PRIVATE)
@@ -250,7 +250,7 @@
 //        }
 //    }
 //
-//    fun SetLevelTitle(title: String)
+//    fun setLevelTitle(title: String)
 //    {
 //        findViewById<TextView>(R.id.LevelSetText).text = title
 //    }

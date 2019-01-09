@@ -1,16 +1,14 @@
 package mine.hunter.com.esdndtrack
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import androidx.core.content.ContextCompat
-import android.view.Menu
-import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
@@ -20,16 +18,25 @@ import mine.hunter.com.esdndtrack.Utilities.*
 class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListener
 {
 	private var fab: FloatingActionButton? = null
-	private var currentTab = 0
+	private val currentTab: Int
+		get()
+		{
+			return if (pager == null) 0
+			else
+			{
+				pager!!.currentItem
+			}
+		}
 	private var pager: androidx.viewpager.widget.ViewPager? = null
 
+	@SuppressLint("ClickableViewAccessibility")
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.main_activity)
 		setSupportActionBar(findViewById(R.id.toolbar))
 
-		supportActionBar?.title = "ES DND"
+		supportActionBar?.title = this.resources.getString(R.string.app_name)
 
 		window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 		fab = findViewById(R.id.MainFAB)
@@ -41,6 +48,14 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		pager?.adapter = PageAdapter(supportFragmentManager)
 		pager?.offscreenPageLimit = 3
 
+		StaticItems.storeTrigger(TriggerListener("disablepager"){
+
+		})
+
+		StaticItems.storeTrigger(TriggerListener("enablepager"){
+
+		})
+
 		pager?.addOnPageChangeListener(object: androidx.viewpager.widget.ViewPager.OnPageChangeListener {
 			override fun onPageScrollStateChanged(state: Int)
 			{
@@ -50,6 +65,8 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 			override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int)
 			{
 				MainTabBar.setScrollPosition(position, positionOffset, false)
+
+				//Hides Keyboard from view when moving the pager
 				this@Main.currentFocus.ifNotNull {
 					val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 					imm.hideSoftInputFromWindow(it.windowToken, 0)
@@ -64,7 +81,6 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 					2 -> fab?.hide()
 					3 -> fab?.show()
 				}
-				currentTab = position
 			}
 		})
 
@@ -121,7 +137,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 						true
 					}
 
-					menu.setOnDismissListener { _ ->
+					menu.setOnDismissListener {
 						fab!!.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.add_icon))
 					}
 				}
@@ -145,6 +161,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 
 class PageAdapter(private val fragmentManager: androidx.fragment.app.FragmentManager): androidx.fragment.app.FragmentPagerAdapter(fragmentManager)
 {
+
 	override fun getItem(position: Int): androidx.fragment.app.Fragment
 	{
 		if (fragmentManager.fragments.size != 0 && position <= fragmentManager.fragments.size)
