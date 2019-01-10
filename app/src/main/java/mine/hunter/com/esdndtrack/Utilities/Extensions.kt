@@ -70,11 +70,24 @@ inline fun <reified T> Pair<T,T>.toArray(): Array<T>
 	return arrayOf(this.first, this.second)
 }
 
-fun List<String>.createString(): String
+fun List<String>.createString(useSpaces: Boolean = false): String
 {
 	var toReturn = ""
-	this.forEach { toReturn += it }
+	this.forEachIndexed{ index, it -> toReturn += if (index < this.size - 1 && useSpaces) "$it " else it }
 	return toReturn
+}
+
+fun <T:Any> Collection<T>.getWhere (predicate: (T) -> Boolean, toDo: (T) -> Unit): Boolean
+{
+	for (i in this)
+	{
+		if (predicate(i))
+		{
+			toDo(i)
+			return true
+		}
+	}
+	return false
 }
 
 // Android Kotlin Extensions

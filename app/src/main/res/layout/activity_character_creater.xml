@@ -4,101 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CharacterCreater"
+    tools:context=".CharacterCreator"
     android:fitsSystemWindows="true"
     >
 
-    <EditText
-        android:id="@+id/NameCreateInput"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ChrMkrName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/darker_gray"
-        android:ems="10"
-        android:hint="Name"
-        android:inputType="textPersonName"
+        android:layout_marginEnd="8dp"
+        android:hint="Character Name"
+        app:boxBackgroundMode="outline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <CheckBox
-        android:id="@+id/UseManaCreateBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:buttonTint="@android:color/holo_blue_dark"
-        android:checked="false"
-        android:text="Uses Magic"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ACCreateInput" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ChrName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none|textCapWords" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/HealthCreateInput"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ChrMkrHealth"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@android:color/holo_red_dark"
-        android:ems="10"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:hint="Health"
-        android:inputType="number"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@android:color/holo_red_dark"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/NameCreateInput" />
+        app:layout_constraintTop_toBottomOf="@+id/ChrMkrName">
 
-    <EditText
-        android:id="@+id/ManaCreateInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:ems="10"
-        android:hint="Magic Points"
-        android:inputType="number"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/UseManaCreateBox" />
-
-    <EditText
-        android:id="@+id/ACCreateInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/holo_orange_dark"
-        android:ems="10"
-        android:hint="AC"
-        android:inputType="number"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HealthCreateInput" />
-
-    <EditText
-        android:id="@+id/SpellBonusCreateInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:ems="10"
-        android:hint="Spell Cast Modifier"
-        android:inputType="numberSigned"
-        app:layout_constraintEnd_toEndOf="@+id/ManaCreateInput"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ManaCreateInput" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ChrHealth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/OnCompleteCreateFloater"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:clickable="true"
         app:backgroundTint="@android:color/holo_green_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="@android:color/holo_green_light"
         app:srcCompat="@drawable/check_mark" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/AttribRecycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ChrMkrHealth" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

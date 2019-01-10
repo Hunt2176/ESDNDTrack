@@ -87,32 +87,12 @@ class CharacterViewRecycle(view: View, val context: Context) : androidx.recycler
 
 	private fun saveToStorage(preferenceTitle: SavableItem, valueToSave: Int)
 	{
-		val preferences = context.getSharedPreferences(name, Context.MODE_PRIVATE)
-		val editor = preferences.edit()
-		when (preferenceTitle)
-		{
-			SavableItem.max_hp -> editor.putInt("max_hp", valueToSave)
-			SavableItem.current_hp -> editor.putInt("current_hp", valueToSave)
-		}
-		editor.apply()
+
 	}
 
 	fun readFromStorage(name: String)
 	{
-		this.name = name
-		characterName.text = name
-		val preferences = context.getSharedPreferences(name, Context.MODE_PRIVATE)
 
-		arrayOf("max_hp", "current_hp", "max_magic", "current_magic", "uses_magic", "character_ac")
-				.forEach { item ->
-					when (item)
-					{
-						"max_hp" -> healthBar.max = preferences.getInt(item, 1)
-						"current_hp" -> healthBar.progress = preferences.getInt(item, healthBar.max)
-						"character_ac" -> itemView.findViewById<TextView>(R.id.ACTextView).text = "AC: ${preferences.getInt(SavableItem.character_ac.getStringKey(), 0)}"
-					}
-				}
-		healthText.text = "Health: ${healthBar.progress}/${healthBar.max}"
 	}
 }
 
@@ -161,10 +141,6 @@ class SetLevelDialog(context: Context, val barToUpdate: ProgressBar, val onChang
 fun CreateCharacterMenu(view: View, sharedPreferences: SharedPreferences): PopupMenu
 {
         val menu = PopupMenu(view.context, view)
-		sharedPreferences.getStringSet("names", mutableSetOf<String>())!!
-				.forEachIndexed { _, s ->
-                    menu.menu.add(s)
-				}
         return menu
 }
 
@@ -189,6 +165,4 @@ enum class SavableItem
 			uses_magic -> "uses_magic"
 		}
 	}
-
-
 }

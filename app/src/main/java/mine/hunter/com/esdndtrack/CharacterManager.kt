@@ -1,9 +1,9 @@
 package mine.hunter.com.esdndtrack
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -13,7 +13,10 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
 import kotlinx.android.synthetic.main.character_manager.*
-import mine.hunter.com.esdndtrack.Utilities.ifNotNull
+import mine.hunter.com.esdndtrack.Utilities.GSONHelper
+import mine.hunter.com.esdndtrack.Utilities.use
+import mine.hunter.com.esdndtrack.Utilities.useAndReturn
+import java.io.File
 
 class CharacterManager: AppCompatActivity()
 {
@@ -38,10 +41,7 @@ class CharacterManager: AppCompatActivity()
 		recycler?.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(this, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
 
 		AddCharacterButton.setOnClickListener {
-//			startActivity(Intent(this, CharacterCreater::class.java))
-			val charCreateDialog = CharacterCreater(this, {addedchar -> if (addedchar) {onResume()}})
-			charCreateDialog.show()
-			charCreateDialog.window.setLayout((6 * resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+			startActivity(Intent(this, CharacterCreator::class.java))
 		}
 	}
 
@@ -61,15 +61,11 @@ class CharacterManager: AppCompatActivity()
 
 class CharacterManageAdapter(val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<CharacterViewHolder>()
 {
-	private var names = arrayListOf<String>()
+	private var names = mutableMapOf<Int, Pair<Int, String>>()
 
 	init
 	{
-		context.getSharedPreferences(SavableItem.character_list.getStringKey(), Context.MODE_PRIVATE)
-				.getStringSet("names", setOf())
-				.ifNotNull {
-					it.forEach { name -> names.add(name) }
-				}
+		DNDCharacter.readFromJson(context).toList().forEachIndexed {index, char -> names[index] = Pair(char.id, char.name)}
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder
@@ -78,14 +74,11 @@ class CharacterManageAdapter(val context: Context): androidx.recyclerview.widget
 		return CharacterViewHolder(view)
 	}
 
-	override fun getItemCount(): Int
-	{
-		return names.size
-	}
+	override fun getItemCount(): Int = names.keys.size
 
 	override fun onBindViewHolder(holder: CharacterViewHolder, position: Int)
 	{
-		holder.nameView.text = names.elementAt(position)
+		holder.nameView.text = names[position]?.second
 		holder.overflowButton.setOnClickListener {
 			val popupMenu = PopupMenu(holder.itemView.context, it)
 			popupMenu.inflate(R.menu.character_manage_overflow)
@@ -96,18 +89,22 @@ class CharacterManageAdapter(val context: Context): androidx.recyclerview.widget
 				{
 					R.id.MENUDeleteCharacter ->
 					{
-						//TODO: Fix issue when removing item and then removing an item before the deleted one
-						this.names.removeAt(position)
-						this.notifyItemRemoved(position)
-						val charList = context.getSharedPreferences(SavableItem.character_list.getStringKey(), Context.MODE_PRIVATE)
-						val charListEditor = charList.edit()
-						charListEditor.putStringSet("names", names.toSet())
-						charListEditor.apply()
+						DNDCharacter.readFromJson(context).toMutableList()
+							.use {list ->
+								list.removeAt(position)
+								names.remove(position)
+								notifyDataSetChanged()
+								GSONHelper().writeToDisk(list.toTypedArray(), File(context.filesDir, "Characters.json"))
+							}
 					}
 
 					R.id.MENUModifyCharacter ->
 					{
-						//TODO: Add way to hook into Character Creator to allow editing of already made character
+						context.startActivity(Intent(context, CharacterCreator::class.java)
+							.useAndReturn { intent ->
+								intent.putExtra("charID", names[position]?.first)
+								intent
+							})
 					}
 				}
 				true
@@ -122,12 +119,6 @@ class CharacterManageAdapter(val context: Context): androidx.recyclerview.widget
 
 class CharacterViewHolder(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 {
-	val nameView: TextView
-	val overflowButton: ImageButton
-
-	init
-	{
-		nameView = view.findViewById(R.id.CharacterManageName)
-		overflowButton = view.findViewById(R.id.CharacterManageOverFlow)
-	}
+	val nameView = view.findViewById<TextView>(R.id.CharacterManageName)
+	val overflowButton = view.findViewById<ImageButton>(R.id.CharacterManageOverFlow)
 }

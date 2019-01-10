@@ -18,9 +18,10 @@
         </activity>
         <activity android:name=".LevelSet" />
         <activity
-            android:name=".CharacterCreater"
+            android:name=".CharacterCreator"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".CharacterManager"/>
+        <activity android:name=".CharacterManager" />
+        <activity android:name=".AttributeCell"></activity>
     </application>
 
 </manifest>

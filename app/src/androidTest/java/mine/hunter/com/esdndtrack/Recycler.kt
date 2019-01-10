@@ -47,7 +47,7 @@
 ////
 ////                menu.setOnMenuItemClickListener {
 ////                    when (it.itemId) {
-////                        R.id.MENUCreateCharacter -> startActivity(Intent(this, CharacterCreater::class.java))
+////                        R.id.MENUCreateCharacter -> startActivity(Intent(this, CharacterCreator::class.java))
 ////                        R.id.MENULoadCharacter -> {
 ////                            val characterMenu = CreateCharacterMenu(fab, getSharedPreferences(SavableItem.character_list.getStringKey(), 0))
 ////                            characterMenu.show()
