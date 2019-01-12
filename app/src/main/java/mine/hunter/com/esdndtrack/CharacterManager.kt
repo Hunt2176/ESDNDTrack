@@ -59,7 +59,7 @@ class CharacterManager: AppCompatActivity()
 	}
 }
 
-class CharacterManageAdapter(val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<CharacterViewHolder>()
+open class CharacterManageAdapter(val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<CharacterViewHolder>()
 {
 	private var names = mutableMapOf<Int, Pair<Int, String>>()
 

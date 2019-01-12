@@ -21,6 +21,7 @@ import mine.hunter.com.esdndtrack.Utilities.*
 import java.io.File
 import java.lang.Exception
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.math.roundToInt
 
 class CharacterCreator: AppCompatActivity()
 {
@@ -56,6 +57,7 @@ class CharacterCreator: AppCompatActivity()
 				        findViewById<TextInputEditText>(R.id.ChrHealth)
 					        .use {
 						        char.hp = it.text.toString().toIntOrZero()
+						        char.currenthp = char.hp
 					        }
 				        char.writeToFile(this)
 				        this.onBackPressed()
@@ -109,6 +111,7 @@ class DNDCharacter()
 	var id = ThreadLocalRandom.current().nextInt()
 	var name = ""
 	var hp = 1
+	var currenthp = hp
 
 	init
 	{
@@ -120,6 +123,7 @@ class DNDCharacter()
 		map["id"].ifNotNull { id = (it as Double).toInt() }
 		map["name"].ifNotNull { name = it.toString() }
 		map["hp"].ifNotNull { hp = (it as Double).toInt() }
+		map["currenthp"].ifNotNull { currenthp = (it as Double).toInt() }
 		(map["attributes"] as? Map<String, Any>)
 			.ifNotNull {  attribs ->
 				attribs.keys.forEach {
@@ -137,6 +141,14 @@ class DNDCharacter()
 	fun setAttrib(attrib: Attribute, level: Int)
 	{
 		attributes[attrib] = level
+	}
+
+	fun getCoreAttributes(): Array<Pair<Attribute, Int>>
+	{
+		return Array(6)
+		{ index ->
+			return@Array Pair(Attribute.attributeList[index + 2] ,getAttrib(Attribute.attributeList[index + 2]))
+		}
 	}
 
 	fun writeToFile(context: Context)
@@ -252,6 +264,19 @@ class DNDCharacter()
 			fun forEachIndexed(completion: (Int, Attribute) -> Unit)
 			{
 				Attribute.attributeList.toList().forEachIndexed(completion)
+			}
+
+			fun advCalculator(level: Int): Int
+			{
+				var x: Double = (level - 10.0)/2.0
+				return if ((x - x.toInt()) != 0.0 && x != 0.0)
+				{
+					x.roundToInt() - 1
+				}
+				else
+				{
+					x.roundToInt()
+				}
 			}
 		}
 	}

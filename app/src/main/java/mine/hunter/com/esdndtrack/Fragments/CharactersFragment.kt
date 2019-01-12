@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_characters.*
 
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.ArrayAdapter
+import mine.hunter.com.esdndtrack.DNDCharacter
 import mine.hunter.com.esdndtrack.Utilities.ifNotNull
 
 
@@ -21,7 +23,6 @@ class CharactersFragment : androidx.fragment.app.Fragment()
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View?
 	{
-		// Inflate the layout for this fragment
 		val viewToReturn = inflater.inflate(R.layout.fragment_characters, container, false)
 
 		viewToReturn.ifNotNull {
@@ -51,18 +52,14 @@ class CharactersFragment : androidx.fragment.app.Fragment()
 		listener = null
 	}
 
-	fun addToCharacterList(name: String)
+	fun addToCharacterList(character: DNDCharacter)
 	{
-		(recycler?.adapter as? ArrayAdapter).ifNotNull {
-			it.characters.add(name)
-			it.notifyDataSetChanged()
-			NoLoadTextView.visibility = View.INVISIBLE
-		}
+		((recycler?.adapter) as? ArrayAdapter)?.addCharacter(character)
+		view?.findViewById<TextView>(R.id.NoLoadTextView)?.text = ""
 	}
 
 	interface OnFragmentInteractionListener
 	{
-		// TODO: Update argument type and name
 		fun onFragmentInteraction(uri: Uri)
 	}
 }

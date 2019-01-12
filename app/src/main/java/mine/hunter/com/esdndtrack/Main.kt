@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
 import mine.hunter.com.esdndtrack.Database.SpellsDB
+import mine.hunter.com.esdndtrack.Dialogs.CharacterLoadDialog
 import mine.hunter.com.esdndtrack.Fragments.*
 import mine.hunter.com.esdndtrack.Utilities.*
 
@@ -125,16 +126,14 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 							}
 							R.id.MENULoadCharacter ->
 							{
-								val charMenu = CreateCharacterMenu(it,
-										it.context.getSharedPreferences(SavableItem.character_list.getStringKey(),
-												Context.MODE_PRIVATE))
-								charMenu.show()
-								charMenu.setOnMenuItemClickListener { charItem ->
-									((pager?.adapter as PageAdapter).getItem(0) as CharactersFragment)
-											.addToCharacterList(charItem.title.toString())
-
-									true
-								}
+								CharacterLoadDialog(this)
+								{
+									char -> char
+										.ifNotNull { char ->
+											((pager?.adapter as PageAdapter).getItem(0) as CharactersFragment)
+												.addToCharacterList(char)
+										}
+								}.show()
 							}
 						}
 
@@ -160,7 +159,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 	{
 		super.onStart()
 		System.out.println("STARTED")
-		Thread{SpellsDB(this).updateFromJson(resources)}.run()
+		Thread{SpellsDB(this).updateFromJson(resources)}.start()
 	}
 
 	override fun onFragmentInteraction(uri: Uri)

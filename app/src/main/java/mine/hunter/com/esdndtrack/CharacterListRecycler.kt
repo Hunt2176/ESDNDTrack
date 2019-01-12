@@ -1,21 +1,28 @@
 package mine.hunter.com.esdndtrack
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.PopupMenu
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import mine.hunter.com.esdndtrack.Dialogs.AttributeRollDialog
+import mine.hunter.com.esdndtrack.Dialogs.AttributeViewDialog
+import mine.hunter.com.esdndtrack.Fragments.SpellViewHolder
+import mine.hunter.com.esdndtrack.Utilities.use
 
 class ArrayAdapter(val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<CharacterViewRecycle>()
 {
-	var characters = arrayListOf<String>()
+	private var characters = arrayListOf<DNDCharacter>()
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewRecycle
 	{
 		val view = LayoutInflater.from(context).inflate(R.layout.character_cell, parent, false)
@@ -26,21 +33,35 @@ class ArrayAdapter(val context: Context) : androidx.recyclerview.widget.Recycler
 
 	override fun onBindViewHolder(holder: CharacterViewRecycle, position: Int)
 	{
-		holder.readFromStorage(characters[position])
+		holder.setup(characters[position])
+	}
+
+	fun addCharacter(char: DNDCharacter)
+	{
+		characters.add(char)
+		notifyDataSetChanged()
+	}
+
+	fun removeCharacter(index: Int)
+	{
+		characters.removeAt(index)
+		notifyDataSetChanged()
 	}
 }
 
 class CharacterViewRecycle(view: View, val context: Context) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 {
+	lateinit var character: DNDCharacter
 	val characterName = view.findViewById<TextView>(R.id.CharacterName)
-	val healthBar: ProgressBar
+	val healthBar: ProgressBar = view.findViewById(R.id.HealthBar)
 	val healthText: TextView = view.findViewById(R.id.HealthText)
+	var attributeDetails: RecyclerView = view.findViewById(R.id.character_cell_attribute_recycler)
+	var toggleButton: ImageButton = view.findViewById(R.id.attributes_cell_toggle)
 	var name = ""
 
 	init
 	{
-		healthBar = view.findViewById(R.id.HealthBar)
-
+		attributeDetails.visibility = View.GONE
 		val healthAdd = view.findViewById<Button>(R.id.HealthAdd)
 		val healthSubtract = view.findViewById<Button>(R.id.HealthSubtract)
 
@@ -49,25 +70,40 @@ class CharacterViewRecycle(view: View, val context: Context) : androidx.recycler
 		healthAdd.setOnClickListener {
 			changeProgressBar(healthBar, 1)
 			healthText.text = "Health: ${healthBar.progress}/${healthBar.max}"
-			saveToStorage(SavableItem.current_hp, healthBar.progress)
+
 		}
 		healthSubtract.setOnClickListener {
 			changeProgressBar(healthBar, -1)
 			healthText.text = "Health: ${healthBar.progress}/${healthBar.max}"
-			saveToStorage(SavableItem.current_hp, healthBar.progress)
-		}
 
+		}
 		healthText.setOnLongClickListener {
 			var SetLevelDialog = SetLevelDialog(context, healthBar) { bar ->
 				copyBarDetails(healthBar, bar, "Health", healthText)
-				saveToStorage(SavableItem.max_hp, healthBar.max)
-				saveToStorage(SavableItem.current_hp, healthBar.progress)
 			}
 			SetLevelDialog.show()
 			SetLevelDialog.setLevelTitle("Set Max Health $name")
-			SetLevelDialog.window.setLayout((6 * view.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+			SetLevelDialog.window?.setLayout((6 * view.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 			true
 		}
+
+		toggleButton
+			.setOnClickListener {
+				when (attributeDetails.visibility)
+				{
+					View.GONE ->
+					{
+						attributeDetails.visibility = View.VISIBLE
+						toggleButton.setBackgroundResource(R.drawable.arrow_collapse)
+						toggleButton.setImageDrawable(context.getDrawable(R.drawable.arrow_collapse))
+					}
+					View.VISIBLE ->
+					{
+						attributeDetails.visibility = View.GONE
+						toggleButton.setImageDrawable(context.getDrawable(R.drawable.arrow_expand))
+					}
+				}
+			}
 	}
 
 	private fun copyBarDetails(barToUpdate: ProgressBar, barToUpdateFrom: ProgressBar, barName: String, textView: TextView)
@@ -82,17 +118,27 @@ class CharacterViewRecycle(view: View, val context: Context) : androidx.recycler
 		if (!(progressBar.progress + amount > progressBar.max || progressBar.progress + amount < 0))
 		{
 			progressBar.progress += amount
+			character.currenthp = progressBar.progress
+			character.writeToFile(context)
 		}
 	}
 
-	private fun saveToStorage(preferenceTitle: SavableItem, valueToSave: Int)
+	fun setup(char: DNDCharacter)
 	{
+		character = char
+		characterName.text = char.name
+		healthText.text = "Health: ${character.currenthp}/${character.hp}"
+		healthBar.max = character.hp
+		healthBar.progress = character.currenthp
+		itemView.findViewById<TextView>(R.id.ACTextView).text = "Base AC: ${char.getAttrib(DNDCharacter.Attribute.BaseAC)}"
+		attributeDetails
+			.use { recycler ->
+				recycler.adapter = AttributeViewRecycler(context, character)
+				recycler.layoutManager = GridLayoutManager(context, 2)
+				recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+			}
 
-	}
-
-	fun readFromStorage(name: String)
-	{
-
+		itemView.setOnLongClickListener { AttributeViewDialog(context, char).show(); true }
 	}
 }
 
@@ -138,31 +184,21 @@ class SetLevelDialog(context: Context, val barToUpdate: ProgressBar, val onChang
     }
 }
 
-fun CreateCharacterMenu(view: View, sharedPreferences: SharedPreferences): PopupMenu
+open class AttributeViewRecycler(val context: Context, val char: DNDCharacter): RecyclerView.Adapter<SpellViewHolder>()
 {
-        val menu = PopupMenu(view.context, view)
-        return menu
-}
+	override fun getItemCount(): Int = 6
 
-enum class SavableItem
-{
-	max_hp,
-	current_hp,
-	character_ac,
-	magicModifier,
-	character_list,
-	uses_magic;
-
-	fun getStringKey(): String
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpellViewHolder
 	{
-		return when (this)
-		{
-			max_hp -> "max_hp"
-			current_hp -> "current_hp"
-			character_ac -> "character_ac"
-			magicModifier -> "magic_modifier"
-			character_list -> "character_list"
-			uses_magic -> "uses_magic"
-		}
+		return SpellViewHolder(LayoutInflater.from(context).inflate(R.layout.spell_cell, parent, false))
+	}
+
+	@SuppressLint("SetTextI18n")
+	override fun onBindViewHolder(holder: SpellViewHolder, position: Int)
+	{
+		val attribute = char.getCoreAttributes()[position]
+		holder.spellNameView.text = "${attribute.first.readableName()}: ${DNDCharacter.Attribute.advCalculator(attribute.second)}"
+		holder.itemView.setOnClickListener { AttributeRollDialog(context, DNDCharacter.Attribute.advCalculator(attribute.second)).show() }
 	}
 }
+

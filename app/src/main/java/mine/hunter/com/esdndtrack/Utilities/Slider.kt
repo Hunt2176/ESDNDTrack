@@ -50,4 +50,14 @@ class ArraySlider<T>(val arrayToSlide: Array<T>) {
     {
         return if (hasRight()) moveRight() else null
     }
+
+    fun toFarLeft()
+    {
+        cursor = 0
+    }
+
+    fun toFarRight()
+    {
+        cursor = arrayToSlide.lastIndex
+    }
 }
