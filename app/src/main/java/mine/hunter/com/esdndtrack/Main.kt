@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
+import mine.hunter.com.esdndtrack.Database.SpellsDB
 import mine.hunter.com.esdndtrack.Fragments.*
 import mine.hunter.com.esdndtrack.Utilities.*
 
@@ -48,15 +49,16 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		pager?.adapter = PageAdapter(supportFragmentManager)
 		pager?.offscreenPageLimit = 3
 
-		StaticItems.storeTrigger(TriggerListener("disablepager"){
+		StaticItems.storeTrigger(TriggerListener("disablepager") {
 
 		})
 
-		StaticItems.storeTrigger(TriggerListener("enablepager"){
+		StaticItems.storeTrigger(TriggerListener("enablepager") {
 
 		})
 
-		pager?.addOnPageChangeListener(object: androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+		pager?.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener
+		{
 			override fun onPageScrollStateChanged(state: Int)
 			{
 
@@ -75,7 +77,8 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 
 			override fun onPageSelected(position: Int)
 			{
-				when (position){
+				when (position)
+				{
 					0 -> fab?.show()
 					1 -> fab?.hide()
 					2 -> fab?.hide()
@@ -84,7 +87,8 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 			}
 		})
 
-		MainTabBar.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+		MainTabBar.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener
+		{
 			override fun onTabReselected(tab: TabLayout.Tab?)
 			{
 				tab.ifNotNull { pager?.currentItem = it.position }
@@ -125,7 +129,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 										it.context.getSharedPreferences(SavableItem.character_list.getStringKey(),
 												Context.MODE_PRIVATE))
 								charMenu.show()
-								charMenu.setOnMenuItemClickListener{ charItem ->
+								charMenu.setOnMenuItemClickListener { charItem ->
 									((pager?.adapter as PageAdapter).getItem(0) as CharactersFragment)
 											.addToCharacterList(charItem.title.toString())
 
@@ -144,13 +148,19 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 
 				3 ->
 				{
-					NoteMaker.show(this){ isReady, pair ->
+					NoteMaker.show(this) { isReady, pair ->
 						if (isReady) ((pager?.adapter as PageAdapter).getItem(3) as NotesFragment).addNoteToView(pair!!)
 					}
 				}
 			}
 		}
+	}
 
+	override fun onStart()
+	{
+		super.onStart()
+		System.out.println("STARTED")
+		Thread{SpellsDB(this).updateFromJson(resources)}.run()
 	}
 
 	override fun onFragmentInteraction(uri: Uri)

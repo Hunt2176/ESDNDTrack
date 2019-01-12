@@ -1,6 +1,7 @@
 package mine.hunter.com.esdndtrack
 
 import android.content.Context
+import android.database.sqlite.SQLiteOpenHelper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import mine.hunter.com.esdndtrack.Database.CharacterDB
 import mine.hunter.com.esdndtrack.Utilities.*
 import java.io.File
 import java.lang.Exception
@@ -59,6 +61,7 @@ class CharacterCreator: AppCompatActivity()
 				        this.onBackPressed()
 			        }
 		    }
+
     }
 }
 
@@ -152,6 +155,18 @@ class DNDCharacter()
 							return@useAndReturn list
 						}.toTypedArray(), File(context.filesDir, "Characters.json"))
 			}
+
+		CharacterDB(context).writableDatabase.execSQL("insert into Characters values ${dbString()}")
+		println(dbString())
+	}
+
+	private fun dbString(): String
+	{
+		var toReturn = "($id,\'${name.replace("\'","\'\'")}\',$hp"
+
+		attributes.forEach { _, value ->toReturn +=  ",$value" }
+
+		return ("$toReturn)")
 	}
 
 	companion object
@@ -232,6 +247,11 @@ class DNDCharacter()
 			fun forEach(completion: (Attribute) -> Unit)
 			{
 				Attribute.attributeList.iterator().forEach { completion(it) }
+			}
+
+			fun forEachIndexed(completion: (Int, Attribute) -> Unit)
+			{
+				Attribute.attributeList.toList().forEachIndexed(completion)
 			}
 		}
 	}

@@ -4,21 +4,12 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
-import androidx.annotation.AnyRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import mine.hunter.com.esdndtrack.DNDCharacter;
@@ -44,7 +35,6 @@ public class GSONHelper {
             ArrayList<ReadInSpell> list = new ArrayList<>(Arrays.asList(readIn));
             list.add(spell);
             writeToDisk(list.toArray(), new File(context.getFilesDir(), "customspells.json"));
-
         }
         catch (IOException error)
         {

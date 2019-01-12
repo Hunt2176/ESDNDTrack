@@ -4,6 +4,8 @@ import android.content.res.ColorStateList
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.core.content.ContextCompat
 import mine.hunter.com.esdndtrack.R
+import java.io.OutputStream
+import java.io.PrintWriter
 
 
 // Native Kotlin Extensions
@@ -64,6 +66,7 @@ fun <E, T:Any> T.useAndReturnDifferent(toDo: (T) -> E): E
 {
 	return toDo(this)
 }
+val OutputStream.printwriter: PrintWriter get() = PrintWriter(this, false)
 
 inline fun <reified T> Pair<T,T>.toArray(): Array<T>
 {
