@@ -15,6 +15,7 @@ class DNDCharacter()
 	var name = ""
 	var hp = 1
 	var currenthp = hp
+	var inventory = arrayListOf<InventoryItem>()
 
 	init
 	{
@@ -54,6 +55,9 @@ class DNDCharacter()
 		}
 	}
 
+	/**
+	 * Updates the character in the characters.json file or writes new if not existent
+	 */
 	fun writeToFile(context: Context)
 	{
 		GSONHelper()

@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.google.gson.Gson
+import mine.hunter.com.esdndtrack.Objects.InventoryItem
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.createString
 
@@ -50,5 +51,25 @@ class DBSpell(val name: String, val desc: String, val range: String, val level: 
 		return "(\'${name.replace("\'","\'\'")}\',\'${desc.replace("\'","\'\'")}\',\'$range\',${
 		if (level == "Cantrip") 0.toString() else Regex("^\\d+").find(level)?.groups?.get(0)?.value
 		},\'$school\')"
+	}
+}
+
+class InventoryDB(context: Context): SQLiteOpenHelper(context, "ItemHistory", null, 1)
+{
+	override fun onCreate(db: SQLiteDatabase?)
+	{
+		db?.execSQL("create table if not exists InventoryItem (name text, description text)")
+	}
+
+	override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int){}
+
+	fun addTo(item: InventoryItem)
+	{
+
+	}
+
+	fun itemList(): Array<InventoryItem>
+	{
+		this.readableDatabase.query
 	}
 }

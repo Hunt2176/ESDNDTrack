@@ -13,6 +13,7 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import mine.hunter.com.esdndtrack.Objects.DNDCharacter;
+import mine.hunter.com.esdndtrack.Objects.ReadInSpell;
 
 public class GSONHelper
 {

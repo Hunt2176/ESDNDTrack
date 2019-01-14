@@ -7,6 +7,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import mine.hunter.com.esdndtrack.Objects.ReadInSpell
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.*
 

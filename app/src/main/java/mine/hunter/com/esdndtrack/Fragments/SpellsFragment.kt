@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import mine.hunter.com.esdndtrack.Dialogs.CreateSpellDialog
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Dialogs.SpellDetailDialog
+import mine.hunter.com.esdndtrack.Objects.ReadInSpell
 import mine.hunter.com.esdndtrack.Utilities.*
 
 class SpellsFragment : androidx.fragment.app.Fragment()

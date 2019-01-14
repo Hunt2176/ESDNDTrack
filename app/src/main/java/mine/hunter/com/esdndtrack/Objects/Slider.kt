@@ -1,4 +1,4 @@
-package mine.hunter.com.esdndtrack.Utilities
+package mine.hunter.com.esdndtrack.Objects
 
 class ArraySlider<T>(val arrayToSlide: Array<T>) {
     private var cursor = 0

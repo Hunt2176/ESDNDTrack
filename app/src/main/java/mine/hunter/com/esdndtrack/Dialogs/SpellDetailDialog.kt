@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.text.Html
 import android.widget.TextView
 import mine.hunter.com.esdndtrack.R
-import mine.hunter.com.esdndtrack.Utilities.ReadInSpell
+import mine.hunter.com.esdndtrack.Objects.ReadInSpell
 
 class SpellDetailDialog(context: Context, val spell: ReadInSpell, private val onDismiss: (() -> Unit)? = null): Dialog(context)
 {

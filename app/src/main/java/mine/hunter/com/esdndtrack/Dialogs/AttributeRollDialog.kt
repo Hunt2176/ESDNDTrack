@@ -8,9 +8,9 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import mine.hunter.com.esdndtrack.R
-import mine.hunter.com.esdndtrack.Utilities.ArraySlider
-import mine.hunter.com.esdndtrack.Utilities.Dice
-import mine.hunter.com.esdndtrack.Utilities.StandardDice
+import mine.hunter.com.esdndtrack.Objects.ArraySlider
+import mine.hunter.com.esdndtrack.Objects.Dice
+import mine.hunter.com.esdndtrack.Objects.StandardDice
 import mine.hunter.com.esdndtrack.Utilities.toIntOrZero
 
 class AttributeRollDialog(context: Context, val level: Int): Dialog(context)
