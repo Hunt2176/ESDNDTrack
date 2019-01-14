@@ -153,13 +153,13 @@ class NoteViewCell(view: View): RecyclerView.ViewHolder(view)
 	}
 }
 
-class NoteMaker(context: Context, val onComplete: (Boolean, Pair<String, String>?) -> Unit): Dialog(context)
+class DualInputDialog private constructor(context: Context, val onComplete: (Boolean, Pair<String, String>?) -> Unit): Dialog(context)
 {
 	companion object
 	{
-		fun show(context: Context, onComplete: (Boolean, Pair<String, String>?) -> Unit): NoteMaker
+		fun show(context: Context, onComplete: (Boolean, Pair<String, String>?) -> Unit): DualInputDialog
 		{
-			return NoteMaker(context, onComplete).useAndReturn {
+			return DualInputDialog(context, onComplete).useAndReturn {
 				it.show()
 				it.window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 				it
@@ -169,13 +169,16 @@ class NoteMaker(context: Context, val onComplete: (Boolean, Pair<String, String>
 
 	var isReady = false
 
+	lateinit var title: TextInputEditText
+	lateinit var body: TextInputEditText
+
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 		setContentView(LayoutInflater.from(context).inflate(R.layout.notes_maker, null))
 
-		val title = findViewById<TextInputEditText>(R.id.MakeNoteTitle)
-		val body = findViewById<TextInputEditText>(R.id.MakeNoteBody)
+		title = findViewById(R.id.MakeNoteTitle)
+		body = findViewById(R.id.MakeNoteBody)
 		val fab = findViewById<FloatingActionButton>(R.id.MakeNoteButton)
 
 		fab.isReadyForComplete(isReady)

@@ -70,6 +70,7 @@ class InventoryDB(context: Context): SQLiteOpenHelper(context, "ItemHistory", nu
 
 	fun itemList(): Array<InventoryItem>
 	{
-		this.readableDatabase.query
+		//Todo: Learn how to do MySQL DB Queries on Android
+		return arrayOf()
 	}
 }

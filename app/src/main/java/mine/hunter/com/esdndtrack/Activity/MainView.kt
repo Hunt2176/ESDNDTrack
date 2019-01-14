@@ -127,7 +127,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 							}
 							R.id.MENULoadCharacter ->
 							{
-								CharacterLoadDialog(this)
+								CharacterLoadDialog(this, "Characters")
 								{
 									char -> char
 										.ifNotNull { char ->
@@ -148,7 +148,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 
 				3 ->
 				{
-					NoteMaker.show(this) { isReady, pair ->
+					DualInputDialog.show(this) { isReady, pair ->
 						if (isReady) ((pager?.adapter as PageAdapter).getItem(3) as NotesFragment).addNoteToView(pair!!)
 					}
 				}
