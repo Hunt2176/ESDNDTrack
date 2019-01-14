@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
-import mine.hunter.com.esdndtrack.SpellCTextWatcher
+import mine.hunter.com.esdndtrack.Dialogs.SpellCTextWatcher
 import mine.hunter.com.esdndtrack.Utilities.*
 
 class NotesFragment: Fragment()

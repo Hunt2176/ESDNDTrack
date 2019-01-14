@@ -1,4 +1,4 @@
-package mine.hunter.com.esdndtrack
+package mine.hunter.com.esdndtrack.Activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.main_activity.*
 import mine.hunter.com.esdndtrack.Database.SpellsDB
 import mine.hunter.com.esdndtrack.Dialogs.CharacterLoadDialog
 import mine.hunter.com.esdndtrack.Fragments.*
+import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.*
 
 class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListener

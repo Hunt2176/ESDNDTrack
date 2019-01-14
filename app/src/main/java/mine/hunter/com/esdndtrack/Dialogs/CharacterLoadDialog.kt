@@ -9,9 +9,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import mine.hunter.com.esdndtrack.CharacterManageAdapter
-import mine.hunter.com.esdndtrack.CharacterViewHolder
-import mine.hunter.com.esdndtrack.DNDCharacter
+import mine.hunter.com.esdndtrack.Activity.CharacterManageAdapter
+import mine.hunter.com.esdndtrack.Activity.CharacterViewHolder
+import mine.hunter.com.esdndtrack.Objects.DNDCharacter
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.use
 

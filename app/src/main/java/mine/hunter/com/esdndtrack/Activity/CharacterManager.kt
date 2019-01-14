@@ -1,4 +1,4 @@
-package mine.hunter.com.esdndtrack
+package mine.hunter.com.esdndtrack.Activity
 
 import android.content.Context
 import android.content.Intent
@@ -13,6 +13,8 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
 import kotlinx.android.synthetic.main.character_manager.*
+import mine.hunter.com.esdndtrack.Objects.DNDCharacter
+import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.GSONHelper
 import mine.hunter.com.esdndtrack.Utilities.use
 import mine.hunter.com.esdndtrack.Utilities.useAndReturn
@@ -65,7 +67,7 @@ open class CharacterManageAdapter(val context: Context): androidx.recyclerview.w
 
 	init
 	{
-		DNDCharacter.readFromJson(context).toList().forEachIndexed {index, char -> names[index] = Pair(char.id, char.name)}
+		DNDCharacter.readFromJson(context).toList().forEachIndexed { index, char -> names[index] = Pair(char.id, char.name)}
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder

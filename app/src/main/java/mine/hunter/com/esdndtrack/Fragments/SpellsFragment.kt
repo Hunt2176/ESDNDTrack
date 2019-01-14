@@ -13,9 +13,9 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import mine.hunter.com.esdndtrack.CreateSpellDialog
+import mine.hunter.com.esdndtrack.Dialogs.CreateSpellDialog
 import mine.hunter.com.esdndtrack.R
-import mine.hunter.com.esdndtrack.SpellDetailDialog
+import mine.hunter.com.esdndtrack.Dialogs.SpellDetailDialog
 import mine.hunter.com.esdndtrack.Utilities.*
 
 class SpellsFragment : androidx.fragment.app.Fragment()
@@ -150,7 +150,7 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 							if (holding)
 							{
 								StaticItems.executeTrigger("disablepager")
-								holdingView = SpellDetailDialog(v.context, it[position]){StaticItems.executeTrigger("enablepager")}
+								holdingView = SpellDetailDialog(v.context, it[position]) { StaticItems.executeTrigger("enablepager") }
 								holdingView?.show()
 							}
 						}.execute()

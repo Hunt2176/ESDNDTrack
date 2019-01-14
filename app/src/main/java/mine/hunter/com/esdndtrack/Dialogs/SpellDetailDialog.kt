@@ -1,10 +1,11 @@
-package mine.hunter.com.esdndtrack
+package mine.hunter.com.esdndtrack.Dialogs
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Html
 import android.widget.TextView
+import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.ReadInSpell
 
 class SpellDetailDialog(context: Context, val spell: ReadInSpell, private val onDismiss: (() -> Unit)? = null): Dialog(context)

@@ -1,4 +1,4 @@
-package mine.hunter.com.esdndtrack
+package mine.hunter.com.esdndtrack.Dialogs
 
 import android.app.Dialog
 import android.content.Context
@@ -7,6 +7,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.*
 
 class CreateSpellDialog(context: Context, val onDismiss: (Boolean) -> Unit): Dialog(context)

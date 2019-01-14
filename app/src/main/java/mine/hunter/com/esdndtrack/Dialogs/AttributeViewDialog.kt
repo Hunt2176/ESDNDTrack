@@ -3,17 +3,15 @@ package mine.hunter.com.esdndtrack.Dialogs
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import mine.hunter.com.esdndtrack.*
+import mine.hunter.com.esdndtrack.Objects.DNDCharacter
+import mine.hunter.com.esdndtrack.UIObjects.CenterAdapter
+import mine.hunter.com.esdndtrack.UIObjects.CenteredViewHolder
 import mine.hunter.com.esdndtrack.Utilities.use
 
 class AttributeViewDialog(context: Context, val character: DNDCharacter): Dialog(context)
@@ -43,17 +41,3 @@ class AttributeViewDialog(context: Context, val character: DNDCharacter): Dialog
 	}
 }
 
-open class CenterAdapter(val context: Context): RecyclerView.Adapter<CenteredViewHolder>()
-{
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CenteredViewHolder
-		= CenteredViewHolder(LayoutInflater.from(context).inflate(R.layout.cell_center_text, parent, false))
-
-	override fun getItemCount(): Int = 0
-
-	override fun onBindViewHolder(holder: CenteredViewHolder, position: Int){}
-}
-
-class CenteredViewHolder(view: View): RecyclerView.ViewHolder(view)
-{
-	val textView: TextView = view.findViewById(R.id.centered_text)
-}

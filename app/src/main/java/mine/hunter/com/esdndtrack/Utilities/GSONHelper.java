@@ -12,9 +12,10 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import mine.hunter.com.esdndtrack.DNDCharacter;
+import mine.hunter.com.esdndtrack.Objects.DNDCharacter;
 
-public class GSONHelper {
+public class GSONHelper
+{
     @NonNull
     Gson gson = new Gson();
 

@@ -31,7 +31,7 @@
 //
 //
 ////        val recycler = findViewById<RecyclerView>(R.id.CharacterList)
-////        recycler.adapter = ArrayAdapter(this)
+////        recycler.adapter = CharacterViewAdapter(this)
 ////        recycler.layoutManager = GridLayoutManager(this, 1)
 ////        recycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 ////
@@ -52,8 +52,8 @@
 ////                            val characterMenu = CreateCharacterMenu(fab, getSharedPreferences(SavableItem.character_list.getStringKey(), 0))
 ////                            characterMenu.show()
 ////                            characterMenu.setOnMenuItemClickListener {
-////                                (recycler.adapter as ArrayAdapter).characters.add(it.title.toString())
-////                                (recycler.adapter as ArrayAdapter).notifyDataSetChanged()
+////                                (recycler.adapter as CharacterViewAdapter).characters.add(it.title.toString())
+////                                (recycler.adapter as CharacterViewAdapter).notifyDataSetChanged()
 ////                                true
 ////                            }
 ////                        }
@@ -69,23 +69,23 @@
 ////        }
 //    }
 //
-//    class ArrayAdapter(val context: Context) : RecyclerView.Adapter<CharacterViewRecycle>() {
+//    class CharacterViewAdapter(val context: Context) : RecyclerView.Adapter<CharacterViewHolder>() {
 //        var characters = arrayListOf<String>()
-//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewRecycle {
+//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
 //            val view = LayoutInflater.from(context).inflate(R.layout.character_cell, parent, false)
-//            return CharacterViewRecycle(view, context)
+//            return CharacterViewHolder(view, context)
 //        }
 //
 //        override fun getItemCount(): Int {
 //            return characters.size
 //        }
 //
-//        override fun onBindViewHolder(holder: CharacterViewRecycle, position: Int) {
+//        override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
 //            holder.readFromStorage(characters[position])
 //        }
 //    }
 //
-//    class CharacterViewRecycle(view: View, val context: Context) : RecyclerView.ViewHolder(view) {
+//    class CharacterViewHolder(view: View, val context: Context) : RecyclerView.ViewHolder(view) {
 //        val characterName = view.findViewById<TextView>(R.id.CharacterName)
 //        val healthBar: ProgressBar
 //        val magicBar: ProgressBar
