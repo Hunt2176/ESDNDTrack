@@ -13,10 +13,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
 import mine.hunter.com.esdndtrack.Database.SpellsDB
-import mine.hunter.com.esdndtrack.Dialogs.CharacterLoadDialog
+import mine.hunter.com.esdndtrack.Dialogs.ItemSelectionDialog
 import mine.hunter.com.esdndtrack.Fragments.*
+import mine.hunter.com.esdndtrack.Objects.DNDCharacter
 import mine.hunter.com.esdndtrack.R
+import mine.hunter.com.esdndtrack.UIObjects.ItemSelectionAdapter
 import mine.hunter.com.esdndtrack.Utilities.*
+import java.io.File
 
 class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListener
 {
@@ -127,14 +130,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 							}
 							R.id.MENULoadCharacter ->
 							{
-								CharacterLoadDialog(this, "Characters")
-								{
-									char -> char
-										.ifNotNull { char ->
-											((pager?.adapter as PageAdapter).getItem(0) as CharactersFragment)
-												.addToCharacterList(char)
-										}
-								}.show()
+								ItemSelectionDialog.dndCharacterList(this) {((pager?.adapter as? PageAdapter)?.getItem(0) as? CharactersFragment)?.addToCharacterList(it); }.show()
 							}
 						}
 

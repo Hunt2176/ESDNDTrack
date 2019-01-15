@@ -69,23 +69,23 @@
 ////        }
 //    }
 //
-//    class CharacterViewAdapter(val context: Context) : RecyclerView.Adapter<CharacterViewHolder>() {
+//    class CharacterViewAdapter(val context: Context) : RecyclerView.Adapter<SelectableViewHolder>() {
 //        var characters = arrayListOf<String>()
-//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
+//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableViewHolder {
 //            val view = LayoutInflater.from(context).inflate(R.layout.character_cell, parent, false)
-//            return CharacterViewHolder(view, context)
+//            return SelectableViewHolder(view, context)
 //        }
 //
 //        override fun getItemCount(): Int {
 //            return characters.size
 //        }
 //
-//        override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
+//        override fun onBindViewHolder(holder: SelectableViewHolder, position: Int) {
 //            holder.readFromStorage(characters[position])
 //        }
 //    }
 //
-//    class CharacterViewHolder(view: View, val context: Context) : RecyclerView.ViewHolder(view) {
+//    class SelectableViewHolder(view: View, val context: Context) : RecyclerView.ViewHolder(view) {
 //        val characterName = view.findViewById<TextView>(R.id.CharacterName)
 //        val healthBar: ProgressBar
 //        val magicBar: ProgressBar

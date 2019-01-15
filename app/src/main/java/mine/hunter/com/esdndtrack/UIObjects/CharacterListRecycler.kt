@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import mine.hunter.com.esdndtrack.Dialogs.AttributeViewDialog
-import mine.hunter.com.esdndtrack.Dialogs.CharacterLoadDialog
+import mine.hunter.com.esdndtrack.Dialogs.ItemSelectionDialog
 import mine.hunter.com.esdndtrack.Dialogs.SetLevelDialog
 import mine.hunter.com.esdndtrack.Objects.DNDCharacter
 import mine.hunter.com.esdndtrack.R
@@ -139,7 +139,7 @@ class CharacterViewHolder(view: View, val context: Context) : androidx.recyclerv
 
 		itemView.setOnLongClickListener { AttributeViewDialog(context, char).show(); true }
 		itemView.findViewById<ImageButton>(R.id.character_inventory_button)
-			.setOnClickListener { CharacterLoadDialog(context, "Inventory"){}.show() }
+			.setOnClickListener { ItemSelectionDialog.inventoryItemsList(context, char.inventory.toTypedArray()).show() }
 	}
 }
 

@@ -1,20 +1,14 @@
 package mine.hunter.com.esdndtrack.Activity
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.PopupMenu
-import android.widget.TextView
 import kotlinx.android.synthetic.main.character_manager.*
 import mine.hunter.com.esdndtrack.Objects.DNDCharacter
 import mine.hunter.com.esdndtrack.R
+import mine.hunter.com.esdndtrack.UIObjects.ItemSelectionAdapter
 import mine.hunter.com.esdndtrack.Utilities.GSONHelper
 import mine.hunter.com.esdndtrack.Utilities.use
 import mine.hunter.com.esdndtrack.Utilities.useAndReturn
@@ -38,7 +32,7 @@ class CharacterManager: AppCompatActivity()
 		window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
 		recycler = findViewById(R.id.CharacterManageRecycler)
-		recycler?.adapter = CharacterManageAdapter(this)
+		recycler?.adapter = getAdapter()
 		recycler?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 1)
 		recycler?.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(this, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
 
@@ -56,71 +50,36 @@ class CharacterManager: AppCompatActivity()
 	override fun onResume()
 	{
 		super.onResume()
-		recycler?.adapter = CharacterManageAdapter(this)
-
-	}
-}
-
-open class CharacterManageAdapter(val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<CharacterViewHolder>()
-{
-	private var names = mutableMapOf<Int, Pair<Int, String>>()
-
-	init
-	{
-		DNDCharacter.readFromJson(context).toList().forEachIndexed { index, char -> names[index] = Pair(char.id, char.name)}
+		recycler?.adapter = getAdapter()
 	}
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder
+	private fun getAdapter(): ItemSelectionAdapter<DNDCharacter>
 	{
-		val view = LayoutInflater.from(context).inflate(R.layout.manage_character_cell, parent, false)
-		return CharacterViewHolder(view)
-	}
+		return object: ItemSelectionAdapter<DNDCharacter>(this, DNDCharacter.readFromJson(this), true, true)
+		{
+			override fun setTitle(item: DNDCharacter): String = item.name
 
-	override fun getItemCount(): Int = names.keys.size
+			override fun onItemSelect(item: DNDCharacter){}
 
-	override fun onBindViewHolder(holder: CharacterViewHolder, position: Int)
-	{
-		holder.nameView.text = names[position]?.second
-		holder.overflowButton.setOnClickListener {
-			val popupMenu = PopupMenu(holder.itemView.context, it)
-			popupMenu.inflate(R.menu.character_manage_overflow)
-			popupMenu.show()
+			override fun modifyOverflowMenu(item: DNDCharacter)
+			{
+				context.startActivity(Intent(context, CharacterCreator::class.java)
+						.useAndReturn { intent ->
+							intent.putExtra("charID", item.id)
+							return@useAndReturn intent
+						})
+			}
 
-			popupMenu.setOnMenuItemClickListener {
-				when (it.itemId)
-				{
-					R.id.MENUDeleteCharacter ->
-					{
-						DNDCharacter.readFromJson(context).toMutableList()
-							.use {list ->
-								list.removeAt(position)
-								names.remove(position)
-								notifyDataSetChanged()
-								GSONHelper().writeToDisk(list.toTypedArray(), File(context.filesDir, "Characters.json"))
-							}
-					}
-
-					R.id.MENUModifyCharacter ->
-					{
-						context.startActivity(Intent(context, CharacterCreator::class.java)
-							.useAndReturn { intent ->
-								intent.putExtra("charID", names[position]?.first)
-								intent
-							})
-					}
-				}
-				true
+			override fun deleteOverflowMenu(item: DNDCharacter)
+			{
+				items.toMutableList()
+						.use { items ->
+							items.remove(item)
+							GSONHelper().writeToDisk(items.toTypedArray(), File(context.filesDir, "Characters.json"))
+						}
+				notifyDataSetChanged()
 			}
 		}
-		holder.itemView.setOnLongClickListener {
-			holder.overflowButton.callOnClick()
-			true
-		}
 	}
 }
 
-class CharacterViewHolder(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
-{
-	val nameView = view.findViewById<TextView>(R.id.CharacterManageName)
-	val overflowButton = view.findViewById<ImageButton>(R.id.CharacterManageOverFlow)
-}
