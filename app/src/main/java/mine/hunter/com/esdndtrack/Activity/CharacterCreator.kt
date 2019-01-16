@@ -5,16 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import mine.hunter.com.esdndtrack.Dialogs.LevelSelectionDialog
+import mine.hunter.com.esdndtrack.Dialogs.ProficiencyDialog
 import mine.hunter.com.esdndtrack.Objects.DNDCharacter
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.*
@@ -35,13 +35,20 @@ class CharacterCreator: AppCompatActivity()
 		    .use { recyclerView ->
 
 			    recyclerView.adapter = AttributeRecycler(this, char)
+			    {
+				    this.currentFocus.ifNotNull {  view ->
+					    (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+						    .use { imm ->
+							    imm.hideSoftInputFromWindow(view.windowToken, 0)
+						    }
+				    }
+			    }
 			    recyclerView.layoutManager = GridLayoutManager(this, 2)
 			    recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 		    }
 
 	    findViewById<TextView>(R.id.ChrName).text = char.name
 	    findViewById<TextView>(R.id.ChrHealth).text = char.hp.toString()
-
 	    findViewById<FloatingActionButton>(R.id.OnCompleteCreateFloater)
 		    .use { fab ->
 			    fab
@@ -59,41 +66,44 @@ class CharacterCreator: AppCompatActivity()
 				        this.onBackPressed()
 			        }
 		    }
-
+	    findViewById<Button>(R.id.ChrProfBtn)
+		    .use { button ->
+				button.setOnClickListener {
+					ProficiencyDialog(this){}.show()
+				}
+		    }
     }
 }
 
-class AttributeRecycler(val context: Context, val character: DNDCharacter): RecyclerView.Adapter<AttributeViewHolder>()
+class AttributeRecycler(val context: Context, val character: DNDCharacter, val onClick: () -> Unit): RecyclerView.Adapter<AttributeViewHolder>()
 {
-	override fun getItemCount(): Int = DNDCharacter.Attribute.attributeList.size
+	override fun getItemCount(): Int = DNDCharacter.Attribute.coreAttributes.size
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AttributeViewHolder =
 			AttributeViewHolder(LayoutInflater.from(context).inflate(R.layout.attribute_cell, parent, false))
 
 	override fun onBindViewHolder(holder: AttributeViewHolder, position: Int)
 	{
-		val pos = position
-		val attrib = DNDCharacter.Attribute.attributeList[pos]
+		val attrib = DNDCharacter.Attribute.coreAttributes[position]
 		holder.attributeName.text = attrib.readableName()
-		holder.attributeLevel.setSelection(character.getAttrib(attrib) - 1)
-		holder.attributeLevel.onItemSelectedListener = object: AdapterView.OnItemSelectedListener
-		{
-			override fun onNothingSelected(parent: AdapterView<*>?){}
-			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
-			{
-				character.setAttrib(attrib, (1..20).toList()[position])
+		holder.attributeLevel.text = attrib.levelFor(character).toString()
+		holder.attributeLevel
+			.setOnClickListener { button ->
+				onClick()
+				LevelSelectionDialog(context, attrib.readableName())
+				{
+					if (it != null)
+					{
+						(button as Button).text = "$it"
+						attrib.setLevelFor(character, it)
+					}
+				}.show()
 			}
-		}
 	}
 }
 
 class AttributeViewHolder(view: View): RecyclerView.ViewHolder(view)
 {
 	val attributeName: TextView = view.findViewById(R.id.AttribName)
-	val attributeLevel: Spinner =
-			view.findViewById<Spinner>(R.id.AttribLvlSpinner)
-			.useAndReturn { spinner ->
-				spinner.adapter = ArrayAdapter<Int>(view.context, android.R.layout.simple_spinner_item, (1..20).toList())
-				return@useAndReturn spinner
-			}
+	val attributeLevel: Button = view.findViewById(R.id.attributeLevel)
 }

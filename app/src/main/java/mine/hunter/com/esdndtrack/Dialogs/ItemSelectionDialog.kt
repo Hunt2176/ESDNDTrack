@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -20,9 +21,11 @@ import mine.hunter.com.esdndtrack.Utilities.use
 import mine.hunter.com.esdndtrack.Utilities.useAndReturn
 import java.io.File
 
-abstract class ItemSelectionDialog<T>(context: Context, val titleText: String = "Title"): Dialog(context)
+abstract class ItemSelectionDialog<T>(context: Context, val titleText: String = "Title", var onAddButtonPressed: (() -> Unit)? = null): Dialog(context)
 {
 	lateinit var title: TextView
+
+	open fun countPerLine(): Int = 1
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -33,31 +36,45 @@ abstract class ItemSelectionDialog<T>(context: Context, val titleText: String = 
 		title.text = titleText
 
 		findViewById<RecyclerView>(R.id.character_load_Recycler)
-				.use {  recycler ->
-					recycler.adapter = getRecyclerAdapter()
-					recycler.layoutManager = GridLayoutManager(context, 1)
-					recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-				}
+			.use {  recycler ->
+				recycler.adapter = getRecyclerAdapter()
+				recycler.layoutManager = GridLayoutManager(context, countPerLine())
+				recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+			}
 
 		findViewById<ImageButton>(R.id.create_new_add)
-			.setOnClickListener { context.startActivity(Intent(context, CharacterCreator::class.java)); dismiss() }
+			.use {  button ->
+				if (onAddButtonPressed == null) button.visibility = View.GONE
+				else button.setOnClickListener { onAddButtonPressed?.invoke(); dismiss() }
+			}
 
 		findViewById<ImageButton>(R.id.character_load_back)
 			.setOnClickListener { cancel() }
 	}
+
 	abstract fun getRecyclerAdapter(): ItemSelectionAdapter<T>
 
 	companion object
 	{
+		fun <T> create(context: Context, dialogTitle: String, itemSelectionAdapter: ItemSelectionAdapter<T>, onAddButtonPressed: (() -> Unit)? = null): ItemSelectionDialog<T>
+		{
+			return object: ItemSelectionDialog<T>(context, dialogTitle, onAddButtonPressed)
+			{
+				override fun getRecyclerAdapter(): ItemSelectionAdapter<T>
+				{
+					return itemSelectionAdapter
+				}
+			}
+		}
 		fun dndCharacterList(context: Context, onSelect: (DNDCharacter) -> Unit): ItemSelectionDialog<DNDCharacter>
 		{
-			return object: ItemSelectionDialog<DNDCharacter>(context, "Characters")
+			return object: ItemSelectionDialog<DNDCharacter>(context, "Characters", {context.startActivity(Intent(context, CharacterCreator::class.java))})
 			{
 				override fun getRecyclerAdapter(): ItemSelectionAdapter<DNDCharacter>
 				{
 					return object: ItemSelectionAdapter<DNDCharacter>(context, DNDCharacter.readFromJson(context), true, true)
 					{
-						override fun setTitle(item: DNDCharacter): String = item.name
+						override fun viewText(item: DNDCharacter): String = item.name
 
 						override fun onItemSelect(item: DNDCharacter){onSelect(item); dismiss()}
 
@@ -91,7 +108,7 @@ abstract class ItemSelectionDialog<T>(context: Context, val titleText: String = 
 				{
 					return object: ItemSelectionAdapter<InventoryItem>(context, items, true, true)
 					{
-						override fun setTitle(item: InventoryItem): String = item.name
+						override fun viewText(item: InventoryItem): String = item.name
 
 						override fun onItemSelect(item: InventoryItem){}
 

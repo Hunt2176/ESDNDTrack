@@ -9,12 +9,12 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import mine.hunter.com.esdndtrack.R
 
-abstract class ItemSelectionAdapter <T> (val context: Context, items: Array<T>, val usesModify: Boolean, val usesDelete: Boolean): androidx.recyclerview.widget.RecyclerView.Adapter<SelectableViewHolder>()
+abstract class ItemSelectionAdapter <T> (val context: Context, items: Array<T>, private val usesModify: Boolean, private val usesDelete: Boolean):
+		androidx.recyclerview.widget.RecyclerView.Adapter<SelectableViewHolder>()
 {
-
 	var items = items.toMutableList()
 
-	abstract fun setTitle(item: T): String
+	abstract fun viewText(item: T): String
 	abstract fun onItemSelect(item: T)
 	abstract fun modifyOverflowMenu(item: T)
 	abstract fun deleteOverflowMenu(item: T)
@@ -28,7 +28,7 @@ abstract class ItemSelectionAdapter <T> (val context: Context, items: Array<T>, 
 	override fun onBindViewHolder(holder: SelectableViewHolder, position: Int)
 	{
 		val item: T = items[position]
-		holder.nameView.text = setTitle(items[position])
+		holder.nameView.text = viewText(items[position])
 		holder.itemView.setOnClickListener { onItemSelect(item) }
 		holder.overflowButton.setOnClickListener {
 			val popupMenu = PopupMenu(holder.itemView.context, it)
@@ -47,14 +47,26 @@ abstract class ItemSelectionAdapter <T> (val context: Context, items: Array<T>, 
 			}
 		}
 	}
+
+	companion object
+	{
+		fun <T> create(context: Context, items: Array<T>, text: (T) -> String, itemSelected: ((T) -> Unit)? = null, modifySelected: ((T) -> Unit)? = null, deleteSelected: ((T) -> Unit)? = null): ItemSelectionAdapter<T>
+		{
+			return object: ItemSelectionAdapter<T>(context, items, modifySelected != null, deleteSelected != null)
+			{
+				override fun viewText(item: T): String = text(item)
+				override fun onItemSelect(item: T) {itemSelected?.invoke(item)}
+				override fun modifyOverflowMenu(item: T){modifySelected?.invoke(item)}
+				override fun deleteOverflowMenu(item: T){deleteSelected?.invoke(item)}
+			}
+		}
+	}
 }
 
-class SelectableViewHolder(view: View, usesOverflow: Boolean): androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
+open class SelectableViewHolder(view: View, usesOverflow: Boolean): androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 {
 	val nameView = view.findViewById<TextView>(R.id.CharacterManageName)
 	val overflowButton = view.findViewById<ImageButton>(R.id.CharacterManageOverFlow)
-	init
-	{
-		if (!usesOverflow) overflowButton.visibility = View.GONE
-	}
+
+	init { if (!usesOverflow) overflowButton.visibility = View.GONE }
 }

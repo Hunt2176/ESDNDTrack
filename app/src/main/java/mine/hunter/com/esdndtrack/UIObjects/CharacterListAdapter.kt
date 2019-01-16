@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import mine.hunter.com.esdndtrack.Dialogs.AttributeViewDialog
 import mine.hunter.com.esdndtrack.Dialogs.ItemSelectionDialog
 import mine.hunter.com.esdndtrack.Dialogs.SetLevelDialog
 import mine.hunter.com.esdndtrack.Objects.DNDCharacter
@@ -129,7 +128,7 @@ class CharacterViewHolder(view: View, val context: Context) : androidx.recyclerv
 		healthText.text = "Health: ${character.currenthp}/${character.hp}"
 		healthBar.max = character.hp
 		healthBar.progress = character.currenthp
-		itemView.findViewById<TextView>(R.id.ACTextView).text = "Base AC: ${char.getAttrib(DNDCharacter.Attribute.BaseAC)}"
+		itemView.findViewById<TextView>(R.id.ACTextView).text = "Base AC: TODO"
 		attributeDetails
 			.use { recycler ->
 				recycler.adapter = AttributeViewRecycler(context, character)
@@ -137,7 +136,12 @@ class CharacterViewHolder(view: View, val context: Context) : androidx.recyclerv
 				recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 			}
 
-		itemView.setOnLongClickListener { AttributeViewDialog(context, char).show(); true }
+		itemView.setOnLongClickListener {
+			ItemSelectionDialog
+					.create(context, "Attributes", ItemSelectionAdapter.create(context, char.getAttributes(),
+					{"${it.first.readableName()}\n${DNDCharacter.Attribute.advCalculator(it.second)}"}
+			)).show()
+			true }
 		itemView.findViewById<ImageButton>(R.id.character_inventory_button)
 			.setOnClickListener { ItemSelectionDialog.inventoryItemsList(context, char.inventory.toTypedArray()).show() }
 	}

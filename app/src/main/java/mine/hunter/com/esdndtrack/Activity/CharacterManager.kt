@@ -55,9 +55,10 @@ class CharacterManager: AppCompatActivity()
 
 	private fun getAdapter(): ItemSelectionAdapter<DNDCharacter>
 	{
-		return object: ItemSelectionAdapter<DNDCharacter>(this, DNDCharacter.readFromJson(this), true, true)
+		val context = this
+		return object: ItemSelectionAdapter<DNDCharacter>(context, DNDCharacter.readFromJson(context), true, true)
 		{
-			override fun setTitle(item: DNDCharacter): String = item.name
+			override fun viewText(item: DNDCharacter): String = item.name
 
 			override fun onItemSelect(item: DNDCharacter){}
 

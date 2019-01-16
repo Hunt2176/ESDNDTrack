@@ -9,7 +9,7 @@ import kotlin.math.roundToInt
 
 class DNDCharacter()
 {
-	private val attributes = mutableMapOf<Attribute, Int>()
+	val attributes = mutableMapOf<Attribute, Int>()
 
 	var id = ThreadLocalRandom.current().nextInt()
 	var name = ""
@@ -28,6 +28,7 @@ class DNDCharacter()
 		map["name"].ifNotNull { name = it.toString() }
 		map["hp"].ifNotNull { hp = (it as Double).toInt() }
 		map["currenthp"].ifNotNull { currenthp = (it as Double).toInt() }
+		map["inventory"].ifNotNull { (it as? Array<InventoryItem>)?.toCollection(inventory) }
 		(map["attributes"] as? Map<String, Any>)
 				.ifNotNull {  attribs ->
 					attribs.keys.forEach {
@@ -47,13 +48,9 @@ class DNDCharacter()
 		attributes[attrib] = level
 	}
 
-	fun getCoreAttributes(): Array<Pair<Attribute, Int>>
-	{
-		return Array(6)
-		{ index ->
-			return@Array Pair(Attribute.attributeList[index + 2] ,getAttrib(Attribute.attributeList[index + 2]))
-		}
-	}
+	fun getAttributes(): Array<Pair<Attribute, Int>> = Attribute.attributes.map { Pair(it, getAttrib(it)) }.toTypedArray()
+
+	fun getCoreAttributes(): Array<Pair<Attribute, Int>> = Attribute.coreAttributes.map { Pair(it, getAttrib(it)) }.toTypedArray()
 
 	/**
 	 * Updates the character in the characters.json file or writes new if not existent
@@ -74,17 +71,13 @@ class DNDCharacter()
 								return@useAndReturn list
 							}.toTypedArray(), File(context.filesDir, "Characters.json"))
 				}
-
-		CharacterDB(context).writableDatabase.execSQL("insert into Characters values ${dbString()}")
 		println(dbString())
 	}
 
 	private fun dbString(): String
 	{
 		var toReturn = "($id,\'${name.replace("\'","\'\'")}\',$hp"
-
 		attributes.forEach { _, value ->toReturn +=  ",$value" }
-
 		return ("$toReturn)")
 	}
 
@@ -111,12 +104,12 @@ class DNDCharacter()
 			}
 			return character
 		}
+
+
 	}
 
 	enum class Attribute
 	{
-		Level,
-		BaseAC,
 		Strength,
 		Dexterity,
 		Constitution,
@@ -150,28 +143,44 @@ class DNDCharacter()
 			return this.name.split(Regex("(?=[A-Z])")).toList().createString(true).trim()
 		}
 
+		fun levelFor(character: DNDCharacter): Int = character.getAttrib(this)
+
+		fun setLevelFor(character: DNDCharacter, newLevel: Int) = character.setAttrib(this, newLevel)
+
+
+
 		companion object
 		{
-			val attributeList: Array<DNDCharacter.Attribute>
+			val abilitySkillRange: IntRange get() = (RangeBottom..RangeTop)
+
+			const val RangeTop = 20
+			const val RangeBottom = 1
+
+			val attributes: Array<DNDCharacter.Attribute>
 				get() = Attribute.values()
 
+			val coreAttributes: List<Attribute>
+				get() = listOf(Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma)
+
 			private val attributeStrings: List<String>
-				get() = attributeList.toList().map { it.toString() }
+				get() = attributes.toList().map { it.toString() }
 
 			fun fromString(value: String): Attribute
 			{
-				return (attributeList[attributeStrings.indexOf(value)])
+				return (attributes[attributeStrings.indexOf(value)])
 			}
 
 			fun forEach(completion: (Attribute) -> Unit)
 			{
-				Attribute.attributeList.iterator().forEach { completion(it) }
+				Attribute.attributes.iterator().forEach { completion(it) }
 			}
 
 			fun forEachIndexed(completion: (Int, Attribute) -> Unit)
 			{
-				Attribute.attributeList.toList().forEachIndexed(completion)
+				Attribute.attributes.toList().forEachIndexed(completion)
 			}
+
+
 
 			fun advCalculator(level: Int): Int
 			{

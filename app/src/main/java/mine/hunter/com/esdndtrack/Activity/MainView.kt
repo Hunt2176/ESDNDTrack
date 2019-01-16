@@ -2,7 +2,6 @@ package mine.hunter.com.esdndtrack.Activity
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,16 +9,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import androidx.core.content.ContextCompat
 import android.view.inputmethod.InputMethodManager
-import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.main_activity.*
 import mine.hunter.com.esdndtrack.Database.SpellsDB
 import mine.hunter.com.esdndtrack.Dialogs.ItemSelectionDialog
 import mine.hunter.com.esdndtrack.Fragments.*
-import mine.hunter.com.esdndtrack.Objects.DNDCharacter
 import mine.hunter.com.esdndtrack.R
-import mine.hunter.com.esdndtrack.UIObjects.ItemSelectionAdapter
 import mine.hunter.com.esdndtrack.Utilities.*
-import java.io.File
 
 class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListener
 {
@@ -42,7 +37,7 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		setContentView(R.layout.main_activity)
 		setSupportActionBar(findViewById(R.id.toolbar))
 
-		supportActionBar?.title = this.resources.getString(R.string.app_name)
+		supportActionBar?.title = resources.getString(R.string.app_name)
 
 		window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 		fab = findViewById(R.id.MainFAB)
@@ -54,20 +49,9 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		pager?.adapter = PageAdapter(supportFragmentManager)
 		pager?.offscreenPageLimit = 3
 
-		StaticItems.storeTrigger(TriggerListener("disablepager") {
-
-		})
-
-		StaticItems.storeTrigger(TriggerListener("enablepager") {
-
-		})
-
 		pager?.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener
 		{
-			override fun onPageScrollStateChanged(state: Int)
-			{
-
-			}
+			override fun onPageScrollStateChanged(state: Int){}
 
 			override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int)
 			{
@@ -94,53 +78,16 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 
 		MainTabBar.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener
 		{
-			override fun onTabReselected(tab: TabLayout.Tab?)
-			{
-				tab.ifNotNull { pager?.currentItem = it.position }
-			}
-
-			override fun onTabUnselected(tab: TabLayout.Tab?)
-			{
-
-			}
-
-			override fun onTabSelected(tab: TabLayout.Tab?)
-			{
-				tab.ifNotNull { pager?.currentItem = it.position }
-			}
+			override fun onTabReselected(tab: TabLayout.Tab?) { tab.ifNotNull { pager?.currentItem = it.position } }
+			override fun onTabUnselected(tab: TabLayout.Tab?){}
+			override fun onTabSelected(tab: TabLayout.Tab?) { tab.ifNotNull { pager?.currentItem = it.position } }
 		})
 
 		fab?.setOnClickListener {
 
 			when (currentTab)
 			{
-				0 ->
-				{
-					fab!!.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.cancel))
-					val menu = PopupMenu(this, it)
-					menu.inflate(R.menu.create_character_fab_menu)
-					menu.show()
-
-					menu.setOnMenuItemClickListener { item ->
-						when (item.itemId)
-						{
-							R.id.MENUManageCharacter ->
-							{
-								startActivity(Intent(this, CharacterManager::class.java))
-							}
-							R.id.MENULoadCharacter ->
-							{
-								ItemSelectionDialog.dndCharacterList(this) {((pager?.adapter as? PageAdapter)?.getItem(0) as? CharactersFragment)?.addToCharacterList(it); }.show()
-							}
-						}
-
-						true
-					}
-
-					menu.setOnDismissListener {
-						fab!!.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.add_icon))
-					}
-				}
+				0 -> ItemSelectionDialog.dndCharacterList(this) {((pager?.adapter as? PageAdapter)?.getItem(0) as? CharactersFragment)?.addToCharacterList(it); }.show()
 
 				3 ->
 				{
@@ -159,15 +106,11 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 		Thread{SpellsDB(this).updateFromJson(resources)}.start()
 	}
 
-	override fun onFragmentInteraction(uri: Uri)
-	{
-
-	}
+	override fun onFragmentInteraction(uri: Uri){}
 }
 
 class PageAdapter(private val fragmentManager: androidx.fragment.app.FragmentManager): androidx.fragment.app.FragmentPagerAdapter(fragmentManager)
 {
-
 	override fun getItem(position: Int): androidx.fragment.app.Fragment
 	{
 		if (fragmentManager.fragments.size != 0 && position <= fragmentManager.fragments.size)
@@ -181,12 +124,9 @@ class PageAdapter(private val fragmentManager: androidx.fragment.app.FragmentMan
 			2 -> SpellsFragment.create()
 			3 -> NotesFragment()
 
-			else ->
-			{
-				CharactersFragment()
-			}
+			else -> CharactersFragment()
+
 		}
 	}
-
 	override fun getCount(): Int = 4
 }

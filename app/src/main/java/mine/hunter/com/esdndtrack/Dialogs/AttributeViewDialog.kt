@@ -25,10 +25,10 @@ class AttributeViewDialog(context: Context, val character: DNDCharacter): Dialog
 			.use { recycler ->
 				recycler.adapter = object: CenterAdapter(context)
 				{
-					override fun getItemCount(): Int = DNDCharacter.Attribute.attributeList.size
+					override fun getItemCount(): Int = DNDCharacter.Attribute.attributes.size
 					override fun onBindViewHolder(holder: CenteredViewHolder, position: Int)
 					{
-						val attribute = DNDCharacter.Attribute.attributeList[position]
+						val attribute = DNDCharacter.Attribute.attributes[position]
 						holder.textView.text = "${attribute.readableName()}\n${character.getAttrib(attribute)}"
 					}
 				}

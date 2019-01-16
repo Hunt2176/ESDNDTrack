@@ -41,6 +41,7 @@ class SpellsDB(context: Context): SQLiteOpenHelper(context, "Spells", null, 1)
 		writableDatabase.execSQL("delete from Spells")
 		Gson().fromJson(resource.openRawResource(R.raw.spellsource).bufferedReader().readLines().createString(), Array<DBSpell>::class.java)
 			.forEach { writableDatabase.execSQL("insert into Spells values ${it.toDBString()}") }
+		writableDatabase.close()
 	}
 }
 
