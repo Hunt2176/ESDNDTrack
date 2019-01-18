@@ -97,14 +97,12 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 				}
 			}
 		}
-	}
 
-	override fun onStart()
-	{
-		super.onStart()
-		System.out.println("STARTED")
+
+		System.out.println("CREATED")
 		Thread{SpellsDB(this).updateFromJson(resources)}.start()
 	}
+
 
 	override fun onFragmentInteraction(uri: Uri){}
 }

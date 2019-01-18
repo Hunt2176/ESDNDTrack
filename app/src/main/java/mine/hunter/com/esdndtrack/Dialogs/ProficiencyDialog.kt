@@ -24,10 +24,9 @@ class ProficiencyDialog(context: Context, val onDismiss: (Map<DNDCharacter.Attri
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
+
 		setContentView(R.layout.dialog_character_picker)
 		findViewById<ImageButton>(R.id.create_new_add).visibility = View.GONE
-		window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
-
 		findViewById<RecyclerView>(R.id.character_load_Recycler)
 			.use { recycler ->
 				recycler.adapter = ProficiencyAdapter(context)
@@ -39,6 +38,12 @@ class ProficiencyDialog(context: Context, val onDismiss: (Map<DNDCharacter.Attri
 
 			}
 
+	}
+
+	override fun show()
+	{
+		super.show()
+		window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 6, (6 * context.resources.displayMetrics.widthPixels) / 6)
 	}
 
 	class ProficiencyAdapter(val context: Context): RecyclerView.Adapter<ProficiencyViewHolder>()

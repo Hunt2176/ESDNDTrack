@@ -31,7 +31,7 @@ abstract class ItemSelectionDialog<T>(context: Context, val titleText: String = 
 	{
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.dialog_character_picker)
-		window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+		window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 6, (6 * context.resources.displayMetrics.widthPixels) / 5)
 		title = findViewById(R.id.create_new_title)
 		title.text = titleText
 
@@ -66,6 +66,7 @@ abstract class ItemSelectionDialog<T>(context: Context, val titleText: String = 
 				}
 			}
 		}
+
 		fun dndCharacterList(context: Context, onSelect: (DNDCharacter) -> Unit): ItemSelectionDialog<DNDCharacter>
 		{
 			return object: ItemSelectionDialog<DNDCharacter>(context, "Characters", {context.startActivity(Intent(context, CharacterCreator::class.java))})

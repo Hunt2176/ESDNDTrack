@@ -28,7 +28,7 @@ abstract class ItemSelectionAdapter <T> (val context: Context, items: Array<T>, 
 	override fun onBindViewHolder(holder: SelectableViewHolder, position: Int)
 	{
 		val item: T = items[position]
-		holder.nameView.text = viewText(items[position])
+		holder.nameView.text = viewText(item)
 		holder.itemView.setOnClickListener { onItemSelect(item) }
 		holder.overflowButton.setOnClickListener {
 			val popupMenu = PopupMenu(holder.itemView.context, it)
@@ -40,8 +40,8 @@ abstract class ItemSelectionAdapter <T> (val context: Context, items: Array<T>, 
 			popupMenu.setOnMenuItemClickListener {
 				when (it.itemId)
 				{
-					R.id.MENUDeleteCharacter -> deleteOverflowMenu(items[position])
-					R.id.MENUModifyCharacter -> modifyOverflowMenu(items[position])
+					R.id.MENUDeleteCharacter -> deleteOverflowMenu(item)
+					R.id.MENUModifyCharacter -> modifyOverflowMenu(item)
 				}
 				return@setOnMenuItemClickListener true
 			}
