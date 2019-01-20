@@ -89,12 +89,9 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 			{
 				0 -> ItemSelectionDialog.dndCharacterList(this) {((pager?.adapter as? PageAdapter)?.getItem(0) as? CharactersFragment)?.addToCharacterList(it); }.show()
 
-				3 ->
-				{
-					DualInputDialog.show(this) { isReady, pair ->
+				3 -> DualInputDialog.show(this) { isReady, pair ->
 						if (isReady) ((pager?.adapter as PageAdapter).getItem(3) as NotesFragment).addNoteToView(pair!!)
 					}
-				}
 			}
 		}
 

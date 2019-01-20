@@ -8,34 +8,37 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageButton
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.Spinner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import mine.hunter.com.esdndtrack.Objects.DNDCharacter
 import mine.hunter.com.esdndtrack.R
+import mine.hunter.com.esdndtrack.Utilities.borrow
 import mine.hunter.com.esdndtrack.Utilities.toIntOrZero
 import mine.hunter.com.esdndtrack.Utilities.use
 import mine.hunter.com.esdndtrack.Utilities.useAndReturn
 
-class ProficiencyDialog(context: Context, val onDismiss: (Map<DNDCharacter.Attribute, Int>) -> Unit): Dialog(context)
+class ProficiencyDialog(context: Context, val char: DNDCharacter): Dialog(context)
 {
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
-
-		setContentView(R.layout.dialog_character_picker)
-		findViewById<ImageButton>(R.id.create_new_add).visibility = View.GONE
+		setContentView(R.layout.dialog_item_selection)
 		findViewById<RecyclerView>(R.id.character_load_Recycler)
 			.use { recycler ->
 				recycler.adapter = ProficiencyAdapter(context)
-						.useAndReturn { adapter ->
-						findViewById<ImageButton>(R.id.character_load_back).setOnClickListener { onDismiss(adapter.proficiencies); }
-						adapter
+						.borrow { adapter ->
+						findViewById<ImageButton>(R.id.character_load_back).setOnClickListener {  }
+						findViewById<ImageButton>(R.id.create_new_add)
+							.setOnClickListener {
+								adapter.addCell()
+							}
 				}
 				recycler.layoutManager = GridLayoutManager(context, 1)
-
 			}
 
 	}
@@ -48,33 +51,33 @@ class ProficiencyDialog(context: Context, val onDismiss: (Map<DNDCharacter.Attri
 
 	class ProficiencyAdapter(val context: Context): RecyclerView.Adapter<ProficiencyViewHolder>()
 	{
-		val proficiencies = mutableMapOf<DNDCharacter.Attribute, Int>()
+		private var proficiencyCells = 0
+		private val proficiencies = mutableMapOf<DNDCharacter.Attribute, Int>()
 		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProficiencyViewHolder =
 				ProficiencyViewHolder(LayoutInflater.from(context).inflate(R.layout.cell_proficiency, parent, false))
 
-		override fun getItemCount(): Int = DNDCharacter.Attribute.attributes.size
+		override fun getItemCount(): Int = proficiencyCells
 
 		override fun onBindViewHolder(holder: ProficiencyViewHolder, position: Int)
 		{
 			val attrib = DNDCharacter.Attribute.attributes[position]
-			holder.inputLayout.hint = attrib.readableName()
-			holder.textView?.addTextChangedListener(object: TextWatcher
-			{
-				override fun afterTextChanged(s: Editable?){}
-				override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int){}
-				override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
-				{
-					if (s == null) return
-					if (s.isEmpty()) proficiencies.remove(attrib)
-					else proficiencies[attrib] = s.toString().toIntOrZero()
-				}
-			})
+
+		}
+
+		fun addCell()
+		{
+			proficiencyCells += 1
+			notifyItemInserted(proficiencyCells - 1)
 		}
 	}
 
 	class ProficiencyViewHolder(view: View): RecyclerView.ViewHolder(view)
 	{
-		val inputLayout = view.findViewById<TextInputLayout>(R.id.attributeOutline)
-		val textView = inputLayout.editText
+		val attribSpinner =
+				view.findViewById<Spinner>(R.id.proficiency_spinner)
+					.borrow { spinner ->
+						spinner.adapter = ArrayAdapter<String>(view.context, android.R.layout.simple_spinner_item, DNDCharacter.Attribute.attributes.map { it.readableName() })
+					}
+		val attribText = view.findViewById<EditText>(R.id.proficiency_toAdd)
 	}
 }

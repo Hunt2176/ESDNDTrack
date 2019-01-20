@@ -20,7 +20,7 @@ class LevelSelectionDialog(context: Context, val title: String, val onDismiss: (
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.dialog_character_picker)
+		setContentView(R.layout.dialog_item_selection)
 		window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 6, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 
 		findViewById<TextView>(R.id.create_new_title).text = title

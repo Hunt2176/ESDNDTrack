@@ -19,7 +19,7 @@ class AttributeViewDialog(context: Context, val character: DNDCharacter): Dialog
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.dialog_character_picker)
+		setContentView(R.layout.dialog_item_selection)
 		window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 		findViewById<RecyclerView>(R.id.character_load_Recycler)
 			.use { recycler ->

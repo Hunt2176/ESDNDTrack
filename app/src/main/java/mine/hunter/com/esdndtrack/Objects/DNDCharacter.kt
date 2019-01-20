@@ -180,8 +180,6 @@ class DNDCharacter()
 				Attribute.attributes.toList().forEachIndexed(completion)
 			}
 
-
-
 			fun advCalculator(level: Int): Int
 			{
 				var x: Double = (level - 10.0)/2.0

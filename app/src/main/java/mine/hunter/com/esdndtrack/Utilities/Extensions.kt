@@ -57,6 +57,12 @@ fun <T:Any> T.use(toDo: (T) -> Unit)
 	toDo(this)
 }
 
+fun <T:Any> T.borrow(toDo: (T) -> Unit): T
+{
+	toDo(this)
+	return this
+}
+
 fun <T:Any> T.useAndReturn(toDo: (T) -> T): T
 {
 	return toDo(this)
