@@ -10,6 +10,7 @@ import kotlin.math.roundToInt
 class DNDCharacter()
 {
 	val attributes = mutableMapOf<Attribute, Int>()
+	val proficiencies = mutableMapOf<Attribute, Int>()
 
 	var id = ThreadLocalRandom.current().nextInt()
 	var name = ""
@@ -29,6 +30,10 @@ class DNDCharacter()
 		map["hp"].ifNotNull { hp = (it as Double).toInt() }
 		map["currenthp"].ifNotNull { currenthp = (it as Double).toInt() }
 		map["inventory"].ifNotNull { (it as? Array<InventoryItem>)?.toCollection(inventory) }
+		(map["proficiencies"] as? Map<String, Any>)
+			.ifNotNull { profs ->
+				profs.forEach{proficiencies[Attribute.fromString(it.key)] = it.value as Int}
+			}
 		(map["attributes"] as? Map<String, Any>)
 				.ifNotNull {  attribs ->
 					attribs.keys.forEach {

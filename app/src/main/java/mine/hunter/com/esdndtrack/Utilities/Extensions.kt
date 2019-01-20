@@ -1,6 +1,9 @@
 package mine.hunter.com.esdndtrack.Utilities
 
 import android.content.res.ColorStateList
+import android.view.View
+import android.widget.AdapterView
+import android.widget.Spinner
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.core.content.ContextCompat
 import mine.hunter.com.esdndtrack.R
@@ -112,6 +115,29 @@ fun FloatingActionButton.isReadyForComplete(isEnabled: Boolean)
 	{
 		this.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark))
 		this.setImageResource(R.drawable.cancel)
+	}
+}
+
+fun Spinner.setOnItemSelectedListener(onSelect: (Int) -> Unit)
+{
+	this.onItemSelectedListener = object: AdapterView.OnItemSelectedListener
+	{
+		override fun onNothingSelected(parent: AdapterView<*>?){}
+		override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
+		{ onSelect(position)}
+	}
+}
+
+fun Spinner.setOnItemSelectedListener(onSelect: (AdapterView<*>?, View?, Int, Long) -> Unit)
+{
+	this.onItemSelectedListener = object: AdapterView.OnItemSelectedListener
+	{
+		override fun onNothingSelected(parent: AdapterView<*>?){}
+
+		override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
+		{
+			onSelect(parent, view, position, id)
+		}
 	}
 }
 

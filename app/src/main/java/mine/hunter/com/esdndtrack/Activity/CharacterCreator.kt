@@ -69,7 +69,7 @@ class CharacterCreator: AppCompatActivity()
 	    findViewById<Button>(R.id.ChrProfBtn)
 		    .use { button ->
 				button.setOnClickListener {
-					ProficiencyDialog(this){}.show()
+					ProficiencyDialog(this, char).show()
 				}
 		    }
     }
