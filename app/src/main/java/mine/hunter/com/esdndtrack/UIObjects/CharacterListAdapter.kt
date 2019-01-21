@@ -139,7 +139,7 @@ class CharacterViewHolder(view: View, val context: Context) : androidx.recyclerv
 		itemView.setOnLongClickListener {
 			ItemSelectionDialog
 					.create(context, "Attributes", ItemSelectionAdapter.create(context, char.getAttributes(),
-					{"${it.first.readableName()}\n${DNDCharacter.Attribute.advCalculator(it.second)}"}
+					{"${it.first.readableName()}\n${char.getProficiencyAttrib(it.first)}"}
 			)).show()
 			true }
 		itemView.findViewById<ImageButton>(R.id.character_inventory_button)

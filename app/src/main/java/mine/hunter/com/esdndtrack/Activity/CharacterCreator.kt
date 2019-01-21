@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import mine.hunter.com.esdndtrack.Dialogs.LevelSelectionDialog
 import mine.hunter.com.esdndtrack.Dialogs.ProficiencyDialog
+import mine.hunter.com.esdndtrack.Dialogs.SpellCTextWatcher
 import mine.hunter.com.esdndtrack.Objects.DNDCharacter
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.*
@@ -47,6 +48,31 @@ class CharacterCreator: AppCompatActivity()
 			    recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 		    }
 
+	    findViewById<RecyclerView>(R.id.ProfRecycler)
+		    .use { recycler ->
+			    recycler.adapter = ProficiencyDialog.ProficiencyAdapter(this, char)
+					    .borrow { adapter ->
+						    adapter.updateFromChar()
+						    findViewById<Button>(R.id.add_prof_btn)
+							    .setOnClickListener { adapter.addCell() }
+					    }
+			    recycler.layoutManager = GridLayoutManager(this, 1)
+			    recycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+		    }
+
+	    findViewById<EditText>(R.id.prof_bonus_text)
+		    .use { editText ->
+			    editText.setText(char.proficiencyBonus.toString())
+			    editText.hint = "Proficiency Bonus"
+			    editText.addTextChangedListener(SpellCTextWatcher.setup {
+				    if (!it) return@setup
+				    editText.text.toString().toIntOrNull()
+					    .ifNotNull {
+						    char.proficiencyBonus = it
+					    }
+			    })
+		    }
+
 	    findViewById<TextView>(R.id.ChrName).text = char.name
 	    findViewById<TextView>(R.id.ChrHealth).text = char.hp.toString()
 	    findViewById<FloatingActionButton>(R.id.OnCompleteCreateFloater)
@@ -66,12 +92,6 @@ class CharacterCreator: AppCompatActivity()
 				        this.onBackPressed()
 			        }
 		    }
-	    findViewById<Button>(R.id.ChrProfBtn)
-		    .use { button ->
-				button.setOnClickListener {
-					ProficiencyDialog(this, char).show()
-				}
-		    }
     }
 }
 
@@ -86,24 +106,18 @@ class AttributeRecycler(val context: Context, val character: DNDCharacter, val o
 	{
 		val attrib = DNDCharacter.Attribute.coreAttributes[position]
 		holder.attributeName.text = attrib.readableName()
-		holder.attributeLevel.text = attrib.levelFor(character).toString()
+		holder.attributeLevel.setSelection(character.getAttrib(attrib) - 1)
 		holder.attributeLevel
-			.setOnClickListener { button ->
-				onClick()
-				LevelSelectionDialog(context, attrib.readableName())
-				{
-					if (it != null)
-					{
-						(button as Button).text = "$it"
-						attrib.setLevelFor(character, it)
-					}
-				}.show()
-			}
+			.setOnItemSelectedListener { it -> character.setAttrib(attrib, it + 1) }
 	}
 }
 
 class AttributeViewHolder(view: View): RecyclerView.ViewHolder(view)
 {
 	val attributeName: TextView = view.findViewById(R.id.AttribName)
-	val attributeLevel: Button = view.findViewById(R.id.attributeLevel)
+	val attributeLevel =
+			view.findViewById<Spinner>(R.id.cell_attrib_lvl_spinner)
+				.borrow { spinner ->
+					spinner.adapter = ArrayAdapter<Int>(view.context, android.R.layout.simple_spinner_item, Array(20){it + 1})
+				}
 }

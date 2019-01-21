@@ -23,7 +23,7 @@ open class AttributeViewRecycler(val context: Context, val char: DNDCharacter): 
 	override fun onBindViewHolder(holder: SpellViewHolder, position: Int)
 	{
 		val attribute = char.getCoreAttributes()[position]
-		holder.spellNameView.text = "${attribute.first.readableName()}: ${DNDCharacter.Attribute.advCalculator(attribute.second)}"
-		holder.itemView.setOnClickListener { AttributeRollDialog(context, DNDCharacter.Attribute.advCalculator(attribute.second)).show() }
+		holder.spellNameView.text = "${attribute.first.readableName()}: ${char.getProficiencyAttrib(attribute.first)}"
+		holder.itemView.setOnClickListener { AttributeRollDialog(context, char.getProficiencyAttrib(attribute.first)).show() }
 	}
 }

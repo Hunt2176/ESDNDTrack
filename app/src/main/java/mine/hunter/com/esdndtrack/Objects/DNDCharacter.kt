@@ -1,7 +1,6 @@
 package mine.hunter.com.esdndtrack.Objects
 
 import android.content.Context
-import mine.hunter.com.esdndtrack.Database.CharacterDB
 import mine.hunter.com.esdndtrack.Utilities.*
 import java.io.File
 import java.util.concurrent.ThreadLocalRandom
@@ -10,12 +9,13 @@ import kotlin.math.roundToInt
 class DNDCharacter()
 {
 	val attributes = mutableMapOf<Attribute, Int>()
-	val proficiencies = mutableMapOf<Attribute, Int>()
+	val proficiencies = ArrayList<Attribute>()
 
 	var id = ThreadLocalRandom.current().nextInt()
 	var name = ""
 	var hp = 1
 	var currenthp = hp
+	var proficiencyBonus = 0
 	var inventory = arrayListOf<InventoryItem>()
 
 	init
@@ -28,16 +28,19 @@ class DNDCharacter()
 		map["id"].ifNotNull { id = (it as Double).toInt() }
 		map["name"].ifNotNull { name = it.toString() }
 		map["hp"].ifNotNull { hp = (it as Double).toInt() }
+		map["proficiencyBonus"].ifNotNull { proficiencyBonus = (it as Double).toInt() }
 		map["currenthp"].ifNotNull { currenthp = (it as Double).toInt() }
 		map["inventory"].ifNotNull { (it as? Array<InventoryItem>)?.toCollection(inventory) }
-		(map["proficiencies"] as? Map<String, Any>)
+		(map["proficiencies"] as? ArrayList<String>)
 			.ifNotNull { profs ->
-				profs.forEach{proficiencies[Attribute.fromString(it.key)] = it.value as Int}
+				profs.forEach {
+					Attribute.fromString(it).ifNotNull { proficiencies.add(it) }
+				}
 			}
 		(map["attributes"] as? Map<String, Any>)
 				.ifNotNull {  attribs ->
 					attribs.keys.forEach {
-						val attrib = Attribute.fromString(it)
+						val attrib = Attribute.fromString(it) ?: return@forEach
 						attributes[attrib] = (attribs[it] as Double).toInt()
 					}
 				}
@@ -56,6 +59,12 @@ class DNDCharacter()
 	fun getAttributes(): Array<Pair<Attribute, Int>> = Attribute.attributes.map { Pair(it, getAttrib(it)) }.toTypedArray()
 
 	fun getCoreAttributes(): Array<Pair<Attribute, Int>> = Attribute.coreAttributes.map { Pair(it, getAttrib(it)) }.toTypedArray()
+
+	fun getProficiencyAttrib(attrib: Attribute): Int
+	{
+		return if (proficiencies.contains(attrib)) return Attribute.advCalculator(getAttrib(attrib.matchingAttribute())) + proficiencyBonus
+		else Attribute.advCalculator(getAttrib(attrib.matchingAttribute()))
+	}
 
 	/**
 	 * Updates the character in the characters.json file or writes new if not existent
@@ -152,6 +161,37 @@ class DNDCharacter()
 
 		fun setLevelFor(character: DNDCharacter, newLevel: Int) = character.setAttrib(this, newLevel)
 
+		fun matchingAttribute(): Attribute
+		{
+			return when (this)
+			{
+				Strength -> Strength
+				Dexterity -> Dexterity
+				Constitution -> Constitution
+				Intelligence -> Intelligence
+				Wisdom -> Wisdom
+				Charisma -> Charisma
+				Acrobatics -> Dexterity
+				AnimalHandling -> Wisdom
+				Arcana -> Intelligence
+				Athletics -> Strength
+				Deception -> Charisma
+				History -> Intelligence
+				Insight -> Wisdom
+				Intimidation -> Charisma
+				Investigation -> Intelligence
+				Medicine -> Wisdom
+				Nature -> Intelligence
+				Perception -> Wisdom
+				Performance -> Charisma
+				Persuasion -> Charisma
+				Religion -> Intelligence
+				SlightOfHand -> Dexterity
+				Stealth -> Dexterity
+				Survival -> Wisdom
+			}
+		}
+
 
 
 		companion object
@@ -170,8 +210,9 @@ class DNDCharacter()
 			private val attributeStrings: List<String>
 				get() = attributes.toList().map { it.toString() }
 
-			fun fromString(value: String): Attribute
+			fun fromString(value: String): Attribute?
 			{
+				if (attributeStrings.indexOf(value) < 0) return null
 				return (attributes[attributeStrings.indexOf(value)])
 			}
 
