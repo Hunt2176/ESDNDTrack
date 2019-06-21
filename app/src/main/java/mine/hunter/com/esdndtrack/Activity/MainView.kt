@@ -2,9 +2,12 @@ package mine.hunter.com.esdndtrack.Activity
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import androidx.core.content.ContextCompat
@@ -35,11 +38,8 @@ class Main : AppCompatActivity(), CharactersFragment.OnFragmentInteractionListen
 	{
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.main_activity)
-		setSupportActionBar(findViewById(R.id.toolbar))
 
-		supportActionBar?.title = resources.getString(R.string.app_name)
-
-		window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+		window.statusBarColor = resources.getColor(R.color.colorPrimaryDark)
 		fab = findViewById(R.id.MainFAB)
 
 		StaticItems.ReadInSpellList(resources)

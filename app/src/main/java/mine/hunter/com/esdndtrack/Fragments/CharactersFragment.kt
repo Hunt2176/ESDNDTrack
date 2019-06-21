@@ -26,9 +26,18 @@ class CharactersFragment : androidx.fragment.app.Fragment()
 
 		viewToReturn.ifNotNull {
 			recycler = it.findViewById(R.id.CharacterList)
-			recycler?.adapter = CharacterViewAdapter(it.context)
+			recycler?.adapter = object: CharacterViewAdapter(it.context)
+			{
+				override fun onRemoval(count: Int)
+				{
+					if ((recycler!!.adapter as CharacterViewAdapter).itemCount > 0) return
+					view?.findViewById<TextView>(R.id.NoLoadTextView)?.text = "No characters currently loaded\n\nLoad or create a new one\nwith the button below"
+				}
+			}
 			recycler?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(it.context, 1)
+
 			recycler?.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(it.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
+
 		}
 		return viewToReturn
 	}

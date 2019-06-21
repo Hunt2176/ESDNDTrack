@@ -128,8 +128,8 @@
 //            }
 //
 //            healthText.setOnLongClickListener {
-//                var SetLevelDialog = SetLevelDialog(context, healthBar) { bar ->
-//                    copyBarDetails(healthBar, bar, "Health", healthText)
+//                var SetLevelDialog = SetLevelDialog(context, healthBar) { pillbar ->
+//                    copyBarDetails(healthBar, pillbar, "Health", healthText)
 //                    SaveToStorage(SavableItem.max_hp, healthBar.max)
 //                    SaveToStorage(SavableItem.current_hp, healthBar.progress)
 //                }
@@ -140,8 +140,8 @@
 //            }
 //
 //            magicText.setOnLongClickListener {
-//                val SetLevelDialog = SetLevelDialog(context, magicBar) { bar ->
-//                    copyBarDetails(magicBar, bar, "Magic", magicText)
+//                val SetLevelDialog = SetLevelDialog(context, magicBar) { pillbar ->
+//                    copyBarDetails(magicBar, pillbar, "Magic", magicText)
 //                    SaveToStorage(SavableItem.max_magic, magicBar.max)
 //                    SaveToStorage(SavableItem.current_magic, magicBar.progress)
 //                }

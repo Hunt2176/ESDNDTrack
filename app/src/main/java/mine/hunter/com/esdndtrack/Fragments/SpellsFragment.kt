@@ -79,7 +79,6 @@ class SpellsFragment : androidx.fragment.app.Fragment()
 
 class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell> = StaticItems.MergeSpellLists()) : androidx.recyclerview.widget.RecyclerView.Adapter<SpellViewHolder>()
 {
-
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpellViewHolder
 	{
 		val view = LayoutInflater.from(context).inflate(R.layout.spell_cell, parent, false)
@@ -91,10 +90,6 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 		return if (spellList.isNull()) 0 else spellList.size
 	}
 
-	//Holds if the user begins holding on a cell
-	private var holding = false
-	//The Dialog that the holding pops up if the user is still holding
-	private var holdingView: SpellDetailDialog? = null
 	override fun onBindViewHolder(holder: SpellViewHolder, position: Int)
 	{
 		spellList.ifNotNull {
@@ -124,10 +119,10 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 											notifyDataSetChanged()
 										}
 									}
-											.use { dialog ->
-												dialog.show()
-												dialog.window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
-											}
+										.use { dialog ->
+											dialog.show()
+											dialog.window?.setLayout((6 * context.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+										}
 								}
 
 								else -> {}
@@ -147,36 +142,17 @@ class SpellsArrayAdapter(val context: Context, var spellList: Array<ReadInSpell>
 					MotionEvent.ACTION_DOWN ->
 					{
 						v.setBackgroundColor(v.context.getColor(R.color.colorAccent))
-						holding = true
-						AndroidTimer(500) {
-							if (holding)
-							{
-								StaticItems.executeTrigger("disablepager")
-								holdingView = SpellDetailDialog(v.context, it[position]) { StaticItems.executeTrigger("enablepager") }
-								holdingView?.show()
-							}
-						}.execute()
 					}
 					MotionEvent.ACTION_CANCEL ->
 					{
 						v.setBackgroundColor(v.context.getColor(android.R.color.white))
-						holding = false
 					}
 					MotionEvent.ACTION_UP ->
 					{
 						v.setBackgroundColor(v.context.getColor(android.R.color.white))
-						if (holding && holdingView != null && holdingView!!.isShowing)
-						{
-							holdingView?.dismiss()
-							holding = false
-						}
-						else
-						{
-							holding = false
-							val dialog = SpellDetailDialog(v.context, it[position])
-							dialog.show()
-							dialog.window?.setLayout((6 * v.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
-						}
+						val dialog = SpellDetailDialog(v.context, it[position])
+						dialog.show()
+						dialog.window?.setLayout((6 * v.resources.displayMetrics.widthPixels) / 7, ConstraintLayout.LayoutParams.WRAP_CONTENT)
 					}
 				}
 				true

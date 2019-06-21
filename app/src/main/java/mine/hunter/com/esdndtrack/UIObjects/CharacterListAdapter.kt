@@ -18,13 +18,14 @@ import mine.hunter.com.esdndtrack.Objects.DNDCharacter
 import mine.hunter.com.esdndtrack.R
 import mine.hunter.com.esdndtrack.Utilities.use
 
-class CharacterViewAdapter(val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<CharacterViewHolder>()
+open class CharacterViewAdapter(val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<CharacterViewHolder>()
 {
 	private var characters = arrayListOf<DNDCharacter>()
+	open fun onRemoval(count: Int){}
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder
 	{
 		val view = LayoutInflater.from(context).inflate(R.layout.character_cell, parent, false)
-		return CharacterViewHolder(view, context)
+		return CharacterViewHolder(view, context, this)
 	}
 
 	override fun getItemCount(): Int = characters.size
@@ -40,14 +41,18 @@ class CharacterViewAdapter(val context: Context) : androidx.recyclerview.widget.
 		notifyDataSetChanged()
 	}
 
-	fun removeCharacter(index: Int)
+	fun removeCharacter(char: DNDCharacter)
 	{
-		characters.removeAt(index)
-		notifyDataSetChanged()
+		characters.indexOf(char)
+			.use {
+				characters.removeAt(it)
+				this.notifyItemRemoved(it)
+			}
+		onRemoval(characters.size)
 	}
 }
 
-class CharacterViewHolder(view: View, val context: Context) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
+class CharacterViewHolder(view: View, val context: Context, val owner: CharacterViewAdapter) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 {
 	lateinit var character: DNDCharacter
 	val characterName = view.findViewById<TextView>(R.id.CharacterName)
@@ -136,12 +141,7 @@ class CharacterViewHolder(view: View, val context: Context) : androidx.recyclerv
 				recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 			}
 
-		itemView.setOnLongClickListener {
-			ItemSelectionDialog
-					.create(context, "Attributes", ItemSelectionAdapter.create(context, char.getAttributes(),
-					{"${it.first.readableName()}\n${char.getProficiencyAttrib(it.first)}"}
-			)).show()
-			true }
+		itemView.setOnLongClickListener { owner.removeCharacter(char); true }
 		itemView.findViewById<ImageButton>(R.id.character_inventory_button)
 			.setOnClickListener { ItemSelectionDialog.inventoryItemsList(context, char.inventory.toTypedArray()).show() }
 	}

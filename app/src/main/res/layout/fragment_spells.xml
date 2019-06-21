@@ -6,39 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/SpellsRecycle"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/SearchBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/SearchBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <EditText
         android:id="@+id/SpellSearchText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
+        android:background="@android:color/transparent"
+        android:elevation="11dp"
         android:ems="10"
-        android:hint="Spell Search"
+        android:hint="Search"
         android:inputType="text"
         android:singleLine="true"
-        android:textColor="@android:color/background_light"
+        android:textColor="@android:color/black"
         android:textColorHint="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="@+id/SearchBar"
         app:layout_constraintEnd_toStartOf="@+id/CreateSpellButton"
@@ -47,14 +29,41 @@
 
     <ImageButton
         android:id="@+id/CreateSpellButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
+        android:elevation="11dp"
+        app:layout_constraintBottom_toBottomOf="@+id/SearchBar"
+        app:layout_constraintEnd_toEndOf="@+id/SearchBar"
+        app:layout_constraintTop_toTopOf="@+id/SearchBar"
+        app:srcCompat="@drawable/add_new_black" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/SearchBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/pillbar"
+        android:elevation="10dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/SearchBar"
-        app:srcCompat="@drawable/add_icon" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/SpellsRecycle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/background_light"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

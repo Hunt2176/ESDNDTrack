@@ -12,7 +12,7 @@ import mine.hunter.com.esdndtrack.R
 
 open class AttributeViewRecycler(val context: Context, val char: DNDCharacter): RecyclerView.Adapter<SpellViewHolder>()
 {
-	override fun getItemCount(): Int = 6
+	override fun getItemCount(): Int = DNDCharacter.Attribute.attributes.size
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpellViewHolder
 	{
@@ -22,7 +22,7 @@ open class AttributeViewRecycler(val context: Context, val char: DNDCharacter): 
 	@SuppressLint("SetTextI18n")
 	override fun onBindViewHolder(holder: SpellViewHolder, position: Int)
 	{
-		val attribute = char.getCoreAttributes()[position]
+		val attribute = char.getAttributes()[position]
 		holder.spellNameView.text = "${attribute.first.readableName()}: ${char.getProficiencyAttrib(attribute.first)}"
 		holder.itemView.setOnClickListener { AttributeRollDialog(context, char.getProficiencyAttrib(attribute.first)).show() }
 	}
